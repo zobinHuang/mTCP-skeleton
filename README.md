@@ -1,6 +1,6 @@
 # mTCP-app
 
-This repo contains some applications build based on mTCP with the support of DPDK 21.11.
+This repo contains some applications built based on mTCP with the support of DPDK 21.11.
 
 ## Usage
 
