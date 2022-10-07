@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "in.h": "c",
+        "cpu.h": "c",
+        "http_parsing.h": "c",
+        "netlib.h": "c",
+        "debug.h": "c",
+        "epserver.h": "c",
+        "assert.h": "c"
+    }
+}
