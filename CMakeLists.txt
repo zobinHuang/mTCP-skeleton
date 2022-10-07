@@ -6,11 +6,16 @@ project(mTCPapp LANGUAGES C)
 
 # set executable output path
 set(PATH_EXECUTABLE bin)
-execute_process( COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_EXECUTABLE})
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_EXECUTABLE})
 SET(EXECUTABLE_OUTPUT_PATH ../${PATH_EXECUTABLE})
 
+# set library output path
+set(PATH_LIBRARY lib)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_LIBRARY})
+SET(LIBRARY_OUTPUT_PATH ../${PATH_LIBRARY})
+
 # find mTCP pre-built library
-find_library(MTCP_LIBRARY NAMES mtcp libmtcp 
+find_library(LIB_MTCP NAMES mtcp 
     HINTS ${CMAKE_CURRENT_LIST_DIR}/lib)
 
 # check whether DPDK exist
@@ -29,36 +34,41 @@ execute_process(
 )
 string(STRIP ${DPDK_LDFLAGS} DPDK_LDFLAGS)
 
-# ====================== utils Library ======================
-file(GLOB_RECURSE SRC_UTILS "utils/*.c")
-add_library(UTILS_LIBRARY ${SRC_UTILS})
-target_include_directories(UTILS_LIBRARY PUBLIC utils/include)
-target_include_directories(UTILS_LIBRARY PUBLIC include)
+# obtain libevent libraries
+set(PATH_LIBEVENT ${CMAKE_CURRENT_LIST_DIR}/third_party/libevent)
+set(PATH_LIBEVENT_LIB ${PATH_LIBEVENT}/build/lib)
+find_library(LIB_EVENT_CORE NAMES event_core HINTS ${PATH_LIBEVENT_LIB})
+find_library(LIB_EVENT_EXTRA NAMES event_extra HINTS ${PATH_LIBEVENT_LIB})
+find_library(LIB_EVENT_OPENSSL NAMES event_openssl HINTS ${PATH_LIBEVENT_LIB})
+find_library(LIB_EVENT_PTHREADS NAMES event_pthreads HINTS ${PATH_LIBEVENT_LIB})
+find_library(LIB_EVENT NAMES event HINTS ${PATH_LIBEVENT_LIB})
 
 # ====================== Application Executables ======================
 SET(PATH_APP src)
-file(GLOB_RECURSE SRC_EPSERVER ${PATH_APP}/epserver.c)
-add_executable(epserver ${SRC_EPSERVER})
+file(GLOB_RECURSE SRC_SERVER ${PATH_APP}/server.c)
+add_executable(epoll_server ${SRC_SERVER})
 
 set(TB_TARGETS 
-    epserver
+    epoll_server
 )
 
 foreach( tb_target ${TB_TARGETS} )
-    # add library
-    target_link_libraries(${tb_target} UTILS_LIBRARY)
-
     # add pre-built library
-    target_link_libraries(${tb_target} ${MTCP_LIBRARY})
+    target_link_libraries(${tb_target} ${LIB_MTCP})
+    target_link_libraries(${tb_target} ${LIB_EVENT_CORE})
+    target_link_libraries(${tb_target} ${LIB_EVENT_EXTRA})
+    target_link_libraries(${tb_target} ${LIB_EVENT_OPENSSL})
+    target_link_libraries(${tb_target} ${LIB_EVENT_PTHREADS})
+    target_link_libraries(${tb_target} ${LIB_EVENT})
     target_link_libraries(${tb_target} ${DPDK_LDFLAGS})
+    
     target_link_libraries(${tb_target} -lpthread -lm -lgmp)
 
     # language feature
     target_compile_features(${tb_target} PUBLIC c_std_11)
 
     # include path
-    target_include_directories(${tb_target} PUBLIC /usr/local/include)
-    target_include_directories(${tb_target} PUBLIC include/io_engine)
-    target_include_directories(${tb_target} PUBLIC include/mtcp)
-    target_include_directories(${tb_target} PUBLIC utils/include)
+    target_include_directories(${tb_target} PUBLIC mtcp_include)
+    target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/include)
+    target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/build/include)
 endforeach( tb_target ${TB_TARGETS} )

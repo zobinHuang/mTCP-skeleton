@@ -6,6 +6,9 @@
         "netlib.h": "c",
         "debug.h": "c",
         "epserver.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "event.h": "c",
+        "mtcp_api.h": "c",
+        "mtcp_epoll.h": "c"
     }
 }
