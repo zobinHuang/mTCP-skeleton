@@ -15,8 +15,9 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_LIBRARY})
 SET(LIBRARY_OUTPUT_PATH ../${PATH_LIBRARY})
 
 # find mTCP pre-built library
-find_library(LIB_MTCP NAMES mtcp 
-    HINTS ${CMAKE_CURRENT_LIST_DIR}/lib)
+set(PATH_LIBMTCP ${CMAKE_CURRENT_LIST_DIR}/third_party/mtcp)
+set(PATH_LIBMTCP_LIB ${CMAKE_CURRENT_LIST_DIR}/third_party/mtcp)
+find_library(LIB_MTCP NAMES mtcp HINTS ${PATH_LIBMTCP_LIB})
 
 # check whether DPDK exist
 find_package(PkgConfig REQUIRED)
@@ -68,7 +69,7 @@ foreach( tb_target ${TB_TARGETS} )
     target_compile_features(${tb_target} PUBLIC c_std_11)
 
     # include path
-    target_include_directories(${tb_target} PUBLIC mtcp_include)
+    target_include_directories(${tb_target} PUBLIC ${PATH_LIBMTCP}/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/build/include)
 endforeach( tb_target ${TB_TARGETS} )
