@@ -1,1 +1,0 @@
-cmd_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.mod := { echo  /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o;  echo; } > /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.mod
