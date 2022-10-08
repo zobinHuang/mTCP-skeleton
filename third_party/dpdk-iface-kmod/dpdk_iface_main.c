@@ -111,6 +111,7 @@ probe_all_rte_devices(char **argv, int *argc)
 		}
 
 		for (i = 0; i < total_files; i++, pci_index++) {
+			fprintf(stdout, "probe PCI device %s\n", dirlist[i]->d_name);
 			argv[*argc] = strdup("-a");
 			argv[*argc + 1] = strdup(dirlist[i]->d_name);
 			if (argv[*argc] == NULL ||

@@ -43,6 +43,8 @@ make
 
 # install kernel module
 sudo insmod dpdk_iface.ko
+
+# run 
 ```
 
 ## Build this project

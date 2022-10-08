@@ -1,0 +1,1 @@
+cmd_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.ko := ld -r  -m elf_x86_64  --build-id=sha1  -T scripts/module.lds -o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.ko /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.mod.o;  true
