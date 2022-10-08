@@ -1,0 +1,1 @@
+cmd_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/Module.symvers := sed 's/\.ko$$/\.o/' /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/modules.order | scripts/mod/modpost -m -a  -o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/Module.symvers -e -i Module.symvers   -T -

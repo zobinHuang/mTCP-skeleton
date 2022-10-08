@@ -40,6 +40,9 @@ export RTE_SDK=/usr/src/dpdk-21.11
 
 # build
 make
+
+# install kernel module
+sudo insmod dpdk_iface.ko
 ```
 
 ## Build this project

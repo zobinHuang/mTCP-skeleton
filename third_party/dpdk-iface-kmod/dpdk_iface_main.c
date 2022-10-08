@@ -111,15 +111,12 @@ probe_all_rte_devices(char **argv, int *argc)
 		}
 
 		for (i = 0; i < total_files; i++, pci_index++) {
-			// argv[*argc] = strdup("-w");
-			// argv[*argc + 1] = strdup(dirlist[i]->d_name);
-			argv[*argc] = strdup(dirlist[i]->d_name);
-			// if (argv[*argc] == NULL ||
-			//     argv[*argc + 1] == NULL)
-			if(argv[*argc] == NULL)
+			argv[*argc] = strdup("-a");
+			argv[*argc + 1] = strdup(dirlist[i]->d_name);
+			if (argv[*argc] == NULL ||
+				argv[*argc + 1] == NULL)
 				goto alloc_err;
-			// *argc += 2;
-			*argc += 1;
+			*argc += 2;
 			if (sscanf(dirlist[i]->d_name, PCI_DOM":"PCI_BUS":"
 				   PCI_DEVICE"."PCI_FUNC,
 				   &di[pci_index].pd.pa.domain,
