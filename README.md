@@ -2,6 +2,8 @@
 
 This repo contains a epoll server/client communication program built based on mTCP with the support of DPDK 21.11.
 
+TODO: Memcached transparent
+
 ## Preparation
 
 1. Make sure the header and library of DPDK 21.11 are installed correctly in your machine [ See <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">Installation of DPDK 21.11</a> for more details ];
