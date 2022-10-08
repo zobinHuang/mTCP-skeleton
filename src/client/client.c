@@ -11,7 +11,7 @@
 #include "client.h"
 
 // mtcp-app util header
-#include <debug_utils.h>
+#include <mtcp_debug.h>
 
 /*!
 	\brief 	create a new socket, bind to specify local address
@@ -22,7 +22,7 @@ int init_socket(){
 	int sock;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0){
-        PRINT_ERROR_ERRNO(errno)
+        MTCPAPP_ERROR_ERRNO(errno)
 		return -1;
     }
 
@@ -32,13 +32,13 @@ int init_socket(){
     client_addr.sin_port = htons(SOCKET_CLIENT_PORT);
     int ret = bind(sock, (struct sockaddr*)&client_addr, sizeof(client_addr));
     if(ret < 0){
-        PRINT_ERROR_ERRNO(errno)
+        MTCPAPP_ERROR_ERRNO(errno)
         close(sock);
-		PRINT_ERROR(
+		MTCPAPP_ERROR(
 			"failed to bind socket to %s:%d, closed", SOCKET_CLIENT_IP, SOCKET_CLIENT_PORT)
 		return -1;
     }
-	PRINT_INFO_MESSAGE(
+	MTCPAPP_INFO_MESSAGE(
 		"bind listen socket to %s:%d", SOCKET_CLIENT_IP, SOCKET_CLIENT_PORT)
 
 	return sock;
@@ -55,8 +55,8 @@ int connect_socket(int client_fd){
     remote_addr.sin_port        = htons(SOCKET_SERVER_PORT);
     int ret = connect(client_fd, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
     if(ret < 0){
-        PRINT_ERROR_ERRNO(errno)
-		PRINT_ERROR(
+        MTCPAPP_ERROR_ERRNO(errno)
+		MTCPAPP_ERROR(
 			"failed to connect socket to %s:%d", SOCKET_SERVER_IP, SOCKET_SERVER_PORT)
 		return -1;
     }

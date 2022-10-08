@@ -8,13 +8,13 @@
 #define CADS_DEBUG_INFO_ENABLE true
 
 // print errno
-#define PRINT_ERROR_ERRNO(errno) \
+#define MTCPAPP_ERROR_ERRNO(errno) \
 {\
-PRINT_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)\
+MTCPAPP_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)\
 }
 
 // print error message with details
-#define PRINT_ERROR(...) \
+#define MTCPAPP_ERROR(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[101m\033[97m MTCP-App Error \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
@@ -25,7 +25,7 @@ fprintf(stderr, ";\n\
 }
 
 // print error message
-#define PRINT_ERROR_MESSAGE(...) \
+#define MTCPAPP_ERROR_MESSAGE(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[101m\033[97m MTCP-App Error \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
@@ -33,7 +33,7 @@ fprintf(stderr, "\n");\
 }
 
 // print warning message with details
-#define PRINT_WARNING(...) \
+#define MTCPAPP_WARNING(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[103m\033[97m MTCP-App Warning \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
@@ -44,7 +44,7 @@ fprintf(stderr, ";\n\
 }
 
 // print error message
-#define PRINT_WARNING_MESSAGE(...) \
+#define MTCPAPP_WARNING_MESSAGE(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[103m\033[97m MTCP-App Warning \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
@@ -53,7 +53,7 @@ fprintf(stderr, "\n");\
 
 // print info message with details
 #if(CADS_DEBUG_INFO_ENABLE)
-#define PRINT_INFO(...) \
+#define MTCPAPP_INFO(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[104m\033[97m MTCP-App Info \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
@@ -63,19 +63,19 @@ fprintf(stderr, ";\n\
 \033[33mline:\033[0m       %d;\n", __FILE__, __func__, __LINE__);\
 }
 #else
-#define PRINT_INFO(...)
+#define MTCPAPP_INFO(...)
 #endif
 
 // print info message
 #if(CADS_DEBUG_INFO_ENABLE)
-#define PRINT_INFO_MESSAGE(...) \
+#define MTCPAPP_INFO_MESSAGE(...) \
 {\
 fprintf(stderr, "\033[31m%s\033[0m \033[104m\033[97m MTCP-App Info \033[0m ",  __TIME__);\
 fprintf(stderr, __VA_ARGS__);\
 fprintf(stderr, "\n");\
 }
 #else
-#define PRINT_INFO_MESSAGE(...)
+#define MTCPAPP_INFO_MESSAGE(...)
 #endif
 
 #endif

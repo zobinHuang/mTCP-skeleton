@@ -49,10 +49,20 @@ find_library(LIB_EVENT NAMES event HINTS ${PATH_LIBEVENT_LIB})
 SET(PATH_SRC src)
 file(GLOB SRC_COMMON ${PATH_SRC}/*.c)
 
-# server code
-SET(PATH_SERVER_SRC src/server)
-file(GLOB_RECURSE SRC_SERVER ${PATH_SERVER_SRC}/*.c)
-add_executable(epoll_server ${SRC_SERVER} ${SRC_COMMON})
+# legacy server code
+SET(PATH_LEGACY_SERVER_SRC src/server)
+file(GLOB_RECURSE SRC_LEGACY_SERVER ${PATH_LEGACY_SERVER_SRC}/*.c)
+add_executable(legacy_server ${SRC_LEGACY_SERVER} ${SRC_COMMON})
+
+# mtcp server code
+SET(PATH_MTCP_SERVER_SRC src/mtcp_server)
+file(GLOB_RECURSE SRC_MTCP_SERVER ${PATH_MTCP_SERVER_SRC}/*.c)
+add_executable(mtcp_server ${SRC_MTCP_SERVER} ${SRC_COMMON})
+
+# dpdk test code
+SET(PATH_DPDK_TEST_SRC src/dpdk_test)
+file(GLOB_RECURSE SRC_DPDK_TEST ${PATH_DPDK_TEST_SRC}/*.c)
+add_executable(dpdk_test ${SRC_DPDK_TEST} ${SRC_COMMON})
 
 # client code
 SET(PATH_CLIENT_SRC src/client)
@@ -60,7 +70,9 @@ file(GLOB_RECURSE SRC_CLIENT ${PATH_CLIENT_SRC}/*.c)
 add_executable(client ${SRC_CLIENT} ${SRC_COMMON})
 
 set(TB_TARGETS 
-    epoll_server
+    legacy_server
+    mtcp_server
+    dpdk_test
     client
 )
 foreach( tb_target ${TB_TARGETS} )

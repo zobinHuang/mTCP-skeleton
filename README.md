@@ -29,6 +29,19 @@ make
 cd ../..
 ```
 
+4. Build `dpdk-iface-kmod` kernel module
+
+```bash
+# move to the root path of dpdk-iface-kmod
+cd third_party/dpdk-iface-kmod
+
+# add environment variable
+export RTE_SDK=/usr/src/dpdk-21.11
+
+# build
+make
+```
+
 ## Build this project
 
 To Build this project, run:
