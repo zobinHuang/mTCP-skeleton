@@ -6,19 +6,70 @@ TODO: Memcached transparent
 
 ## Preparation
 
+0. Install dependencies
+
+```bash
+sudo apt-get install automake
+```
+
 1. Make sure the header and library of DPDK 21.11 are installed correctly in your machine [ See <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">Installation of DPDK 21.11</a> for more details ];
 
 2. Compiling mTCP based on DPDK 21.11
 
 ```bash
-# enter the libevent subdirectory
+# enter the mtcp subdirectory
+cd third_party/mtcp
+
+# confige build process
+./configure --with-dpdk-lib=$RTE_SDK/$RTE_TARGET
+```
+
+Then we should update the makefile under `third_party/mtcp/mtcp/src` 
+
+Modify the following statement
+
+```bash
+# CFLAGS for DPDK-related compilation
+ifeq ($(DPDK), 1)
+include $(RTE_SDK)/mk/rte.vars.mk
+CFLAGS+=-g -O2
+ifeq ($(ENFORCE_RX_IDLE), 1)
+INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0
+endif
+else
+INC += -DDISABLE_DPDK
+endif
+```
+
+to
+
+```bash
+# CFLAGS for DPDK-related compilation
+ifeq ($(DPDK), 1)
+# include $(RTE_SDK)/mk/rte.vars.mk
+# CFLAGS+=-g -O2
+CFLAGS+=$(pkg-config --cflags libdpdk)
+CFLAGS+=-msse4.2
+LDFLAGS+=$(pkg-config --libs libdpdk)
+ifeq ($(ENFORCE_RX_IDLE), 1)
+INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0
+endif
+else
+INC += -DDISABLE_DPDK
+endif
+```
+
+Then we can build the mtcp library:
+
+```bash
+# enter the mtcp subdirectory
 cd third_party/mtcp
 
 # build
 make
 ```
 
-[ See <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/index.html"> for more details about making mTCP capable with DPDK 21.11]
+[ We have modify some code of mTCP, see <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/index.html"> for more details about making mTCP capable with DPDK 21.11]
 
 3. Build `libevent-2.1.10`
 
