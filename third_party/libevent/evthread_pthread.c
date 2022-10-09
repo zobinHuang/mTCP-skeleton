@@ -32,7 +32,7 @@
 #include <pthread.h>
 
 struct event_base;
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 
 #include <stdlib.h>
 #include <string.h>

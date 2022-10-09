@@ -11,7 +11,7 @@
 #include "client.h"
 
 // mtcp-app util header
-#include <mtcp_debug.h>
+#include <mtcp_skeleton_debug.h>
 
 /*!
 	\brief 	create a new socket, bind to specify local address
@@ -23,7 +23,7 @@ int init_socket(){
     int option = 1;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
 		return -1;
     }
     setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
@@ -35,13 +35,13 @@ int init_socket(){
     client_addr.sin_port = htons(SOCKET_CLIENT_PORT);
     int ret = bind(sock, (struct sockaddr*)&client_addr, sizeof(client_addr));
     if(ret < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
         close(sock);
-		MTCPAPP_ERROR(
+		MTCP_SKELETON_ERROR(
 			"failed to bind socket to %s:%d, closed", SOCKET_CLIENT_IP, SOCKET_CLIENT_PORT)
 		return -1;
     }
-	MTCPAPP_INFO_MESSAGE(
+	MTCP_SKELETON_INFO_MESSAGE(
 		"bind listen socket to %s:%d", SOCKET_CLIENT_IP, SOCKET_CLIENT_PORT)
 
 	return sock;
@@ -58,8 +58,8 @@ int connect_socket(int client_fd){
     remote_addr.sin_port        = htons(SOCKET_SERVER_PORT);
     int ret = connect(client_fd, (struct sockaddr*)&remote_addr, sizeof(remote_addr));
     if(ret < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
-		MTCPAPP_ERROR(
+        MTCP_SKELETON_ERROR_ERRNO(errno)
+		MTCP_SKELETON_ERROR(
 			"failed to connect socket to %s:%d", SOCKET_SERVER_IP, SOCKET_SERVER_PORT)
 		return -1;
     }

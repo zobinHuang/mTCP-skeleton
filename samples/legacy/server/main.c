@@ -18,7 +18,7 @@
 #include <event2/event.h>
 
 // mtcp-app util header
-#include <mtcp_debug.h>
+#include <mtcp_skeleton_debug.h>
 
 // server header
 #include "server.h"
@@ -42,7 +42,7 @@ int main(){
 	event_listen.events = EPOLLIN | EPOLLET;
 	event_listen.data.fd = listen_fd;
 	if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, listen_fd, &event_listen)){
-		MTCPAPP_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
+		MTCP_SKELETON_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
 		goto close_epoll_fd;
 	}
 
@@ -51,7 +51,7 @@ int main(){
 	event_stop.events = EPOLLIN;
 	event_stop.data.fd = 0;
 	if(epoll_ctl(epoll_fd, EPOLL_CTL_ADD, 0, &event_stop)){
-		MTCPAPP_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
+		MTCP_SKELETON_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
 		goto close_epoll_fd;
 	}
 
@@ -60,7 +60,7 @@ int main(){
 		event_count = epoll_wait(epoll_fd, event_list, EPOLL_MAX_EVENTS, EPOLL_TIMEOUT);
 		// epoll error
 		if(event_count < 0){
-			MTCPAPP_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
+			MTCP_SKELETON_ERROR("Errno - %s (errno: %d)\n", strerror(errno), errno)
 			goto close_epoll_fd;
 		}
 
@@ -76,7 +76,7 @@ int main(){
                 !(event_list[i].events & EPOLLIN))
             {
               close(event_list[i].data.fd);
-			  MTCPAPP_WARNING_MESSAGE(
+			  MTCP_SKELETON_WARNING_MESSAGE(
 				"Error occurs on socket %d, closed", event_list[i].data.fd)
             }
 
@@ -100,21 +100,21 @@ int main(){
 close_listen_socket:
 	if(listen_fd >= 0){
 		close(listen_fd);
-		MTCPAPP_INFO_MESSAGE(
+		MTCP_SKELETON_INFO_MESSAGE(
 			"close listen socket %d", listen_fd)
 	}
 	else
-		MTCPAPP_WARNING_MESSAGE(
+		MTCP_SKELETON_WARNING_MESSAGE(
 			"cant't close non-exist socket %d", listen_fd)
 
 close_epoll_fd:
 	if(epoll_fd >= 0){
 		close(epoll_fd);
-		MTCPAPP_INFO_MESSAGE(
+		MTCP_SKELETON_INFO_MESSAGE(
 			"close epoll handle %d", epoll_fd)
 	}
 	else
-		MTCPAPP_WARNING_MESSAGE(
+		MTCP_SKELETON_WARNING_MESSAGE(
 			"cant't close non-exist epoll instance %d", epoll_fd)
 
 exit:

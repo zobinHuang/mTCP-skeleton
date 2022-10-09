@@ -53,7 +53,7 @@
 
 #include "event-internal.h"
 #include "evsignal-internal.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "evthread-internal.h"
 #include "log-internal.h"
 #include "evmap-internal.h"

@@ -38,7 +38,7 @@ endif
 
 noinst_HEADERS+=				\
 	test/regress.h				\
-	test/regress_thread.h			\
+	test/regress_mtcp_skeleton_thread.h			\
 	test/tinytest.h				\
 	test/tinytest_local.h			\
 	test/tinytest_macros.h
@@ -118,7 +118,7 @@ test_regress_SOURCES = 				\
 	test/regress_minheap.c			\
 	test/regress_rpc.c				\
 	test/regress_testutils.c			\
-	test/regress_testutils.h			\
+	test/regress_testmtcp_skeleton_utils.h			\
 	test/regress_util.c				\
 	test/tinytest.c				\
 	$(regress_thread_SOURCES)		\

@@ -98,10 +98,13 @@ INC += -I$(PS_DIR)/include
 
 # CFLAGS for DPDK-related compilation
 ifeq ($(DPDK), 1)
-include $(RTE_SDK)/mk/rte.vars.mk
-CFLAGS+=@CFLAGS@
+# include $(RTE_SDK)/mk/rte.vars.mk
+# CFLAGS+=-g -O2
+CFLAGS+=$(pkg-config --cflags libdpdk)
+CFLAGS+=-msse4.2
+LDFLAGS+=$(pkg-config --libs libdpdk)
 ifeq ($(ENFORCE_RX_IDLE), 1)
-INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=@RX_IDLE_THRESH@
+INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0
 endif
 else
 INC += -DDISABLE_DPDK

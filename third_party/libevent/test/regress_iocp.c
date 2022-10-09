@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "event2/event.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "event2/buffer.h"
 #include "event2/buffer_compat.h"
 #include "event2/bufferevent.h"

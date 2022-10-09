@@ -50,7 +50,7 @@
 #include <event2/keyvalq_struct.h>
 
 #ifdef _WIN32
-#include <event2/thread.h>
+#include <event2/mtcp_skeleton_thread.h>
 #endif /* _WIN32 */
 
 #ifdef EVENT__HAVE_NETINET_IN_H

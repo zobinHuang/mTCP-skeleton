@@ -50,7 +50,7 @@
 #include <string.h>
 #include <limits.h>
 #include <netware.h>
-#include <nks/thread.h>
+#include <nks/mtcp_skeleton_thread.h>
 #include <nks/synch.h>
 #include <nks/time.h>
 #include <signal.h>

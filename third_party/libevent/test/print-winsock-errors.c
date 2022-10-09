@@ -6,7 +6,7 @@
 
 #include "event2/event.h"
 #include "event2/util.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 
 #define E(x) printf (#x " -> \"%s\"\n", evutil_socket_error_to_string (x));
 

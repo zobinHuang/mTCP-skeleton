@@ -88,7 +88,7 @@
 #include "event2/bufferevent.h"
 #include "event2/bufferevent_compat.h"
 #include "event2/bufferevent_struct.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "log-internal.h"
 #include "mm-internal.h"
 #include "util-internal.h"

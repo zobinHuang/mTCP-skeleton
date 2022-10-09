@@ -64,7 +64,7 @@
 #include "log-internal.h"
 #include "http-internal.h"
 #include "regress.h"
-#include "regress_testutils.h"
+#include "regress_testmtcp_skeleton_utils.h"
 
 /* set if a test needs to call loopexit on a base */
 static struct event_base *exit_base;

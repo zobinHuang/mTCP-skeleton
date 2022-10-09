@@ -72,12 +72,12 @@
 #include "event2/util.h"
 #include "event2/listener.h"
 #include "event2/bufferevent.h"
-#include <event2/thread.h>
+#include <event2/mtcp_skeleton_thread.h>
 #include "log-internal.h"
 #include "evthread-internal.h"
 #include "regress.h"
-#include "regress_testutils.h"
-#include "regress_thread.h"
+#include "regress_testmtcp_skeleton_utils.h"
+#include "regress_mtcp_skeleton_thread.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 

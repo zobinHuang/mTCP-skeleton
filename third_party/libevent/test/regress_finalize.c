@@ -36,7 +36,7 @@
 #include "defer-internal.h"
 
 #include "regress.h"
-#include "regress_thread.h"
+#include "regress_mtcp_skeleton_thread.h"
 
 static void
 timer_callback(evutil_socket_t fd, short what, void *arg)

@@ -228,7 +228,7 @@ What's New In Libevent 2.0 so far:
   If you are using some locking system besides Windows and pthreads, You
   can enable this on a per-event-base level by writing functions to
   implement mutexes, conditions, and thread IDs, and passing them to
-  evthread_set_lock_callbacks and related functions in event2/thread.h.
+  evthread_set_lock_callbacks and related functions in event2/mtcp_skeleton_thread.h.
 
   Once locking functions are enabled, every new event_base is created with a
   lock.  You can prevent a single event_base from being built with a lock

@@ -46,7 +46,7 @@
 #include "event2/buffer.h"
 #include "event2/util.h"
 #include "event2/http.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 
 static void http_basic_cb(struct evhttp_request *req, void *arg);
 

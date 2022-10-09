@@ -1,4 +1,4 @@
-# mTCP-app
+# mTCP-skeleton
 
 This repo contains a epoll server/client communication program built based on mTCP with the support of DPDK 21.11.
 
@@ -16,60 +16,26 @@ sudo apt-get install automake
 
 2. Compiling mTCP based on DPDK 21.11
 
+To build mTCP, run:
+
 ```bash
 # enter the mtcp subdirectory
 cd third_party/mtcp
 
 # confige build process
 ./configure --with-dpdk-lib=$RTE_SDK/$RTE_TARGET
-```
-
-Then we should update the makefile under `third_party/mtcp/mtcp/src` 
-
-Modify the following statement
-
-```bash
-# CFLAGS for DPDK-related compilation
-ifeq ($(DPDK), 1)
-include $(RTE_SDK)/mk/rte.vars.mk
-CFLAGS+=-g -O2
-ifeq ($(ENFORCE_RX_IDLE), 1)
-INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0
-endif
-else
-INC += -DDISABLE_DPDK
-endif
-```
-
-to
-
-```bash
-# CFLAGS for DPDK-related compilation
-ifeq ($(DPDK), 1)
-# include $(RTE_SDK)/mk/rte.vars.mk
-# CFLAGS+=-g -O2
-CFLAGS+=$(pkg-config --cflags libdpdk)
-CFLAGS+=-msse4.2
-LDFLAGS+=$(pkg-config --libs libdpdk)
-ifeq ($(ENFORCE_RX_IDLE), 1)
-INC += -DENFORCE_RX_IDLE -DRX_IDLE_THRESH=0
-endif
-else
-INC += -DDISABLE_DPDK
-endif
-```
-
-Then we can build the mtcp library:
-
-```bash
-# enter the mtcp subdirectory
-cd third_party/mtcp
 
 # build
 make
 ```
 
-[ We have modify some code of mTCP, see <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/index.html"> for more details about making mTCP capable with DPDK 21.11]
+We have modified some code of mTCP, see <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_mTCP_Compiled/index.html">Guide to compile mTCP with DPDK 21.11</a> for more details about making mTCP capable with DPDK 21.11.
+
+To clean all build files of mtcp, run:
+
+```bash
+make distclean
+```
 
 3. Build `libevent-2.1.10`
 
@@ -105,7 +71,11 @@ make
 # install kernel module
 sudo insmod dpdk_iface.ko
 
-# run 
+# run the binary for testing
+sudo ./dpdk_iface_main
+
+# config interface ip address (for Intel NIC)
+sudo ifconfig dpdk0 10.0.20.2 netmask 255.255.255.0 up
 ```
 
 ## Build this project

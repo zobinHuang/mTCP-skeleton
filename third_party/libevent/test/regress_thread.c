@@ -56,7 +56,7 @@
 
 #include "event2/event.h"
 #include "event2/event_struct.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "event2/util.h"
 #include "evthread-internal.h"
 #include "event-internal.h"
@@ -64,7 +64,7 @@
 #include "regress.h"
 #include "tinytest_macros.h"
 #include "time-internal.h"
-#include "regress_thread.h"
+#include "regress_mtcp_skeleton_thread.h"
 
 struct cond_wait {
 	void *lock;

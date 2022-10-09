@@ -36,7 +36,7 @@ extern "C" {
 #include "event2/util.h"
 #include "defer-internal.h"
 #include "evthread-internal.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "ratelim-internal.h"
 #include "event2/bufferevent_struct.h"
 

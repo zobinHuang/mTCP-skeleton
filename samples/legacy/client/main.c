@@ -11,7 +11,7 @@
 #include "client.h"
 
 // mtcp-app util header
-#include <mtcp_debug.h>
+#include <mtcp_skeleton_debug.h>
 
 int main(){
     int sock = init_socket();
@@ -27,19 +27,19 @@ int main(){
     strcpy(sendbuf, "Hi!");
     ret = send(sock, sendbuf, strlen(sendbuf)+1, 0);
     if(ret <= 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
         goto close_socket;
     }
-    MTCPAPP_INFO_MESSAGE("send '%s' to remote server", sendbuf);
+    MTCP_SKELETON_INFO_MESSAGE("send '%s' to remote server", sendbuf);
 
 close_socket:
 	if(sock >= 0){
 		close(sock);
-		MTCPAPP_INFO_MESSAGE(
+		MTCP_SKELETON_INFO_MESSAGE(
 			"close socket %d", sock)
 	}
 	else
-		MTCPAPP_WARNING_MESSAGE(
+		MTCP_SKELETON_WARNING_MESSAGE(
 			"cant't close non-exist socket %d", sock)
 
 exit:

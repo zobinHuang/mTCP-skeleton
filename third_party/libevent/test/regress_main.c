@@ -77,7 +77,7 @@
 #include "event2/event_compat.h"
 #include "event2/dns.h"
 #include "event2/dns_compat.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 
 #include "event2/event-config.h"
 #include "regress.h"

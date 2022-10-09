@@ -760,7 +760,7 @@ set(HDR_PUBLIC
     include/event2/rpc_struct.h
     include/event2/tag.h
     include/event2/tag_compat.h
-    include/event2/thread.h
+    include/event2/mtcp_skeleton_thread.h
     include/event2/util.h
     include/event2/visibility.h
     ${PROJECT_BINARY_DIR}/include/event2/event-config.h)
@@ -1071,7 +1071,7 @@ if (NOT EVENT__DISABLE_TESTS)
                  test/regress_minheap.c
                  test/regress_rpc.c
                  test/regress_testutils.c
-                 test/regress_testutils.h
+                 test/regress_testmtcp_skeleton_utils.h
                  test/regress_util.c
                  test/tinytest.c)
 

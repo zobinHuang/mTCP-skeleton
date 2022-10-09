@@ -47,7 +47,7 @@
 #include "event2/event.h"
 #include "event-internal.h"
 #include "evmap-internal.h"
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 #include "evthread-internal.h"
 #include "time-internal.h"
 

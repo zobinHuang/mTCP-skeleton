@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <malloc.h>
 #include <sys/epoll.h>
 
 // mtcp header
@@ -17,16 +18,22 @@
 // libevent header
 #include <event2/event.h>
 
-// mtcp-app util header
-#include <mtcp_debug.h>
+// mtcp-skeleton header
+#include <mtcp_skeleton_utils.h>
+#include <mtcp_skeleton_debug.h>
+#include <mtcp_skeleton_thread.h>
+#include <mtcp_skeleton_server_config.h>
 
-// server header
 #include "server.h"
 
+/*!
+	\brief 	create and config a new socket for server listenting
+	\return	the created socket
+ */
 int init_epoll(){
 	int epoll_fd = epoll_create1(0);
 	if(epoll_fd == -1){
-		MTCPAPP_ERROR_ERRNO(errno)
+		MTCP_SKELETON_ERROR_ERRNO(errno)
 		return -1;
 	}
 	return epoll_fd;
@@ -41,7 +48,7 @@ int init_listen_socket(){
 	int sock;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
 		return -1;
     }
 
@@ -55,22 +62,22 @@ int init_listen_socket(){
 	// bind listen socket to address
 	int ret = bind(sock, (struct sockaddr*)&server_addr, sizeof(server_addr));
 	if(ret < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
         close(sock);
-		MTCPAPP_ERROR(
+		MTCP_SKELETON_ERROR(
 			"failed to bind socket to %s:%d, closed", SOCKET_SERVER_IP, SOCKET_SERVER_PORT)
 		return -1;
     }
-	MTCPAPP_INFO_MESSAGE(
+	MTCP_SKELETON_INFO_MESSAGE(
 		"bind listen socket to %s:%d", SOCKET_SERVER_IP, SOCKET_SERVER_PORT)
 
 	// start listening
     ret = listen(sock, 0);
     if(ret < 0){
-        MTCPAPP_ERROR_ERRNO(errno)
+        MTCP_SKELETON_ERROR_ERRNO(errno)
         return -1;
     }
-	MTCPAPP_INFO_MESSAGE("bind socket start listening")
+	MTCP_SKELETON_INFO_MESSAGE("bind socket start listening")
 
 	return sock;
 }
@@ -91,9 +98,9 @@ void accept_connection(int listen_fd, int epoll_fd, int *socket_list, int socket
 	// accept connection
 	int con_fd = accept(listen_fd, (struct sockaddr*)&remote_addr, &len);
 	if(con_fd < 0){
-		MTCPAPP_ERROR_ERRNO(errno)
+		MTCP_SKELETON_ERROR_ERRNO(errno)
 	}
-	MTCPAPP_INFO_MESSAGE(
+	MTCP_SKELETON_INFO_MESSAGE(
 		"accept connection from %s:%d", 
 		inet_ntoa(remote_addr.sin_addr),
 		ntohs(remote_addr.sin_port)
@@ -119,10 +126,10 @@ void process_recv(int recv_fd){
 	int ret = recv(recv_fd, recv_buf, SOCKET_RECV_BUF_SIZE, 0);
 	if(ret < 0){
 		close(recv_fd);
-		MTCPAPP_WARNING_MESSAGE("failed to recv from socket %d, closed", recv_fd)
+		MTCP_SKELETON_WARNING_MESSAGE("failed to recv from socket %d, closed", recv_fd)
 	}
 	recv_buf[ret] = '\0';
-	MTCPAPP_INFO_MESSAGE("Recv: %s", recv_buf);
+	MTCP_SKELETON_INFO_MESSAGE("Recv: %s", recv_buf);
 }
 
 /*!
@@ -134,11 +141,18 @@ void close_sockets(int *socket_list, int socket_num){
 	for(int i=0; i<socket_num; i++){
 		int s = socket_list[i];
 		if(s < 0){
-			MTCPAPP_WARNING_MESSAGE(
+			MTCP_SKELETON_WARNING_MESSAGE(
 				"cant't close non-exist socket %d", s)
 			continue;
 		}
 
 		close(s);
 	}
+}
+
+void* mtcp_server_thread(void *arg){
+	thread_arg _arg = *(thread_arg*)arg;
+	int *p_core_index = (int*)_arg.args[0];
+	MTCP_SKELETON_INFO_MESSAGE("enter sever thread on core %d\n", *p_core_index);
+	
 }

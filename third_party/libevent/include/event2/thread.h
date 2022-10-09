@@ -26,7 +26,7 @@
 #ifndef EVENT2_THREAD_H_INCLUDED_
 #define EVENT2_THREAD_H_INCLUDED_
 
-/** @file event2/thread.h
+/** @file event2/mtcp_skeleton_thread.h
 
   Functions for multi-threaded applications using Libevent.
 

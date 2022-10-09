@@ -8,14 +8,15 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "utils.h"
-#include "mtcp_debug.h"
+#include <mtcp_skeleton_thread.h>
+#include <mtcp_skeleton_debug.h>
+#include <mtcp_skeleton_utils.h>
 
 int get_cpu_num(){
 	return sysconf(_SC_NPROCESSORS_ONLN);
 }
 
-int mtcpapp_strtol(const char *nptr, int base){
+int mtcp_skeleton_strtol(const char *nptr, int base){
 	int rval;
 	char *endptr;
 
@@ -29,7 +30,7 @@ int mtcpapp_strtol(const char *nptr, int base){
 		exit(EXIT_FAILURE);
 	}
 	if (endptr == nptr) {
-		MTCPAPP_ERROR_MESSAGE("Parsing strtol error!");
+		MTCP_SKELETON_ERROR_MESSAGE("Parsing strtol error!");
 		exit(EXIT_FAILURE);
 	}
 

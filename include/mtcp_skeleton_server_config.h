@@ -1,5 +1,5 @@
-#ifndef _SERVER_CONFIG_H_
-#define _SERVER_CONFIG_H_
+#ifndef _MTCP_SKELETON_SERVER_CONFIG_H_
+#define _MTCP_SKELETON_SERVER_CONFIG_H_
 
 // epoll config
 #define EPOLL_MAX_EVENTS    100
@@ -14,12 +14,15 @@
 typedef struct server_config{
     int     cpu_num;
     int     cpu_limit;
+    int     cpu_offset;
+    int     backlog;
+    bool    multi_threaded;
     char    *conf_file;
 } server_config;
 
 int init_epoll();
 int init_listen_socket();
-server_config* parse_args(int argc, char **argv);
+void* mtcp_server_thread(void *arg);
 void accept_connection(int listen_fd, int epoll_fd, int *socket_list, int socket_num);
 void process_recv(int recv_fd);
 void close_sockets(int *socket_list, int socket_num);

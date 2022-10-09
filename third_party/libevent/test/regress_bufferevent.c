@@ -82,7 +82,7 @@
 #endif
 
 #include "regress.h"
-#include "regress_testutils.h"
+#include "regress_testmtcp_skeleton_utils.h"
 
 /*
  * simple bufferevent test

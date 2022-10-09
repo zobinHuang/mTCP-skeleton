@@ -68,7 +68,7 @@
 #include "regress.gen.h"
 
 #include "regress.h"
-#include "regress_testutils.h"
+#include "regress_testmtcp_skeleton_utils.h"
 
 #ifndef NO_PYTHON_EXISTS
 

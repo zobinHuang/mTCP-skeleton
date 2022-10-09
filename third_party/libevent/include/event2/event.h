@@ -65,7 +65,7 @@
   library.  If you're going to use Libevent from multiple threads in a
   multithreaded application, you need to initialize thread support --
   typically by using evthread_use_pthreads() or
-  evthread_use_windows_threads().  See <event2/thread.h> for more
+  evthread_use_windows_threads().  See <event2/mtcp_skeleton_thread.h> for more
   information.
 
   This is also the point where you can replace Libevent's memory
@@ -157,7 +157,7 @@
   event2/event.h
   The primary libevent header
 
-  event2/thread.h
+  event2/mtcp_skeleton_thread.h
   Functions for use by multithreaded programs
 
   event2/buffer.h and event2/bufferevent.h

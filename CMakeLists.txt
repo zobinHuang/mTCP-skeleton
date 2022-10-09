@@ -4,18 +4,15 @@ cmake_minimum_required(VERSION 3.16.3)
 # project info
 project(mTCPapp LANGUAGES C)
 
-# cflags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -msse2")
-
 # set executable output path
 set(PATH_EXECUTABLE bin)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_EXECUTABLE})
 SET(EXECUTABLE_OUTPUT_PATH ../${PATH_EXECUTABLE})
 
 # set library output path
-# set(PATH_LIBRARY lib)
-# execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_LIBRARY})
-# SET(LIBRARY_OUTPUT_PATH ../${PATH_LIBRARY})
+set(PATH_LIBRARY lib)
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_LIBRARY})
+SET(LIBRARY_OUTPUT_PATH ../${PATH_LIBRARY})
 
 # find mTCP pre-built library
 set(PATH_LIBMTCP ${CMAKE_CURRENT_LIST_DIR}/third_party/mtcp)
@@ -47,36 +44,48 @@ find_library(LIB_EVENT_OPENSSL NAMES event_openssl HINTS ${PATH_LIBEVENT_LIB})
 find_library(LIB_EVENT_PTHREADS NAMES event_pthreads HINTS ${PATH_LIBEVENT_LIB})
 find_library(LIB_EVENT NAMES event HINTS ${PATH_LIBEVENT_LIB})
 
-# ====================== Application Executables ======================
-# common code of both client and server
-SET(PATH_SRC src)
-file(GLOB SRC_COMMON ${PATH_SRC}/*.c)
+# ====================== MTCP-skeleton Library ======================
+SET(PATH_LIB_MTCP_SKELETON_SRC src)
+file(GLOB_RECURSE SRC_LIB_MTCP_SKELETON ${PATH_LIB_MTCP_SKELETON_SRC}/*.c)
+add_library(mtcp_skeleton ${SRC_LIB_MTCP_SKELETON})
+target_include_directories(mtcp_skeleton PUBLIC include)
+target_include_directories(mtcp_skeleton PUBLIC ${PATH_LIBMTCP}/mtcp/include)
+target_include_directories(mtcp_skeleton PUBLIC ${PATH_LIBEVENT}/include)
+target_include_directories(mtcp_skeleton PUBLIC ${PATH_LIBEVENT}/build/include)
+
+# ====================== Sample Executables ======================
+# path to sample code
+SET(PATH_SAMPLE_SRC samples)
 
 # legacy server code
-SET(PATH_LEGACY_SERVER_SRC src/server)
-file(GLOB_RECURSE SRC_LEGACY_SERVER ${PATH_LEGACY_SERVER_SRC}/*.c)
-add_executable(legacy_server ${SRC_LEGACY_SERVER} ${SRC_COMMON})
+SET(PATH_SAMPLE_LEGACY_SERVER_SRC ${PATH_SAMPLE_SRC}/legacy/server)
+file(GLOB_RECURSE SRC_LEGACY_SERVER ${PATH_SAMPLE_LEGACY_SERVER_SRC}/*.c)
+add_executable(sample_legacy_server ${SRC_LEGACY_SERVER})
+
+# legacy client code
+SET(PATH_SAMPLE_CLIENT_SRC ${PATH_SAMPLE_SRC}/legacy/client)
+file(GLOB_RECURSE SRC_LEGACY_CLIENT ${PATH_SAMPLE_CLIENT_SRC}/*.c)
+add_executable(sample_legacy_client ${SRC_LEGACY_CLIENT})
 
 # mtcp server code
-SET(PATH_MTCP_SERVER_SRC src/mtcp_server)
-file(GLOB_RECURSE SRC_MTCP_SERVER ${PATH_MTCP_SERVER_SRC}/*.c)
-add_executable(mtcp_server ${SRC_MTCP_SERVER} ${SRC_COMMON})
+SET(PATH_SAMPLE_MTCP_SERVER_SRC ${PATH_SAMPLE_SRC}/mtcp_server)
+file(GLOB_RECURSE SRC_MTCP_SERVER ${PATH_SAMPLE_MTCP_SERVER_SRC}/*.c)
+add_executable(sample_mtcp_server ${SRC_MTCP_SERVER})
+
+# ====================== Utils Executables ======================
+# path to sample code
+SET(PATH_UTILS_SRC utils)
 
 # dpdk test code
-SET(PATH_DPDK_TEST_SRC src/dpdk_test)
-file(GLOB_RECURSE SRC_DPDK_TEST ${PATH_DPDK_TEST_SRC}/*.c)
-add_executable(dpdk_test ${SRC_DPDK_TEST} ${SRC_COMMON})
-
-# client code
-SET(PATH_CLIENT_SRC src/client)
-file(GLOB_RECURSE SRC_CLIENT ${PATH_CLIENT_SRC}/*.c)
-add_executable(client ${SRC_CLIENT} ${SRC_COMMON})
+SET(PATH_UTILS_DPDK_TEST_SRC ${PATH_UTILS_SRC}/dpdk_test)
+file(GLOB_RECURSE SRC_DPDK_TEST ${PATH_UTILS_DPDK_TEST_SRC}/*.c)
+add_executable(utils_dpdk_test ${SRC_DPDK_TEST})
 
 set(TB_TARGETS 
-    legacy_server
-    mtcp_server
-    dpdk_test
-    client
+    sample_legacy_server
+    sample_legacy_client
+    sample_mtcp_server
+    utils_dpdk_test
 )
 foreach( tb_target ${TB_TARGETS} )
     # add pre-built library
@@ -89,11 +98,14 @@ foreach( tb_target ${TB_TARGETS} )
     target_link_libraries(${tb_target} ${DPDK_LDFLAGS})
     target_link_libraries(${tb_target} -lpthread -lm -lgmp)
 
+    # add mtcp-skeleton library
+    target_link_libraries(${tb_target} mtcp_skeleton)
+
     # language feature
     target_compile_features(${tb_target} PUBLIC c_std_11)
 
     # include path
-    target_include_directories(${tb_target} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+    target_include_directories(${tb_target} PUBLIC include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBMTCP}/mtcp/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/build/include)

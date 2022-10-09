@@ -70,7 +70,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "event2/thread.h"
+#include "event2/mtcp_skeleton_thread.h"
 
 #include "evthread-internal.h"
 #include "event-internal.h"

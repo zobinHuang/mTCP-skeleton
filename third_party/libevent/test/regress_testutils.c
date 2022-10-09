@@ -67,7 +67,7 @@
 #include "event2/bufferevent.h"
 #include "log-internal.h"
 #include "regress.h"
-#include "regress_testutils.h"
+#include "regress_testmtcp_skeleton_utils.h"
 
 /* globals */
 static struct evdns_server_port *dns_port;
