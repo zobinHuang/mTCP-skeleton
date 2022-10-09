@@ -19,7 +19,7 @@ SET(EXECUTABLE_OUTPUT_PATH ../${PATH_EXECUTABLE})
 
 # find mTCP pre-built library
 set(PATH_LIBMTCP ${CMAKE_CURRENT_LIST_DIR}/third_party/mtcp)
-set(PATH_LIBMTCP_LIB ${CMAKE_CURRENT_LIST_DIR}/third_party/mtcp)
+set(PATH_LIBMTCP_LIB ${PATH_LIBMTCP}/mtcp/lib)
 find_library(LIB_MTCP NAMES mtcp HINTS ${PATH_LIBMTCP_LIB})
 
 # check whether DPDK exist
@@ -94,7 +94,7 @@ foreach( tb_target ${TB_TARGETS} )
 
     # include path
     target_include_directories(${tb_target} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
-    target_include_directories(${tb_target} PUBLIC ${PATH_LIBMTCP}/include)
+    target_include_directories(${tb_target} PUBLIC ${PATH_LIBMTCP}/mtcp/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/include)
     target_include_directories(${tb_target} PUBLIC ${PATH_LIBEVENT}/build/include)
 endforeach( tb_target ${TB_TARGETS} )

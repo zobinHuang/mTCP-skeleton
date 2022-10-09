@@ -16,50 +16,19 @@
 #include <rte_debug.h>
 #include <rte_ethdev.h>
 
-/* Launch a function on lcore. 8< */
-static int
-lcore_hello(__rte_unused void *arg)
+int main(int argc, char **argv)
 {
-	unsigned lcore_id;
-	lcore_id = rte_lcore_id();
-	printf("hello from core %u\n", lcore_id);
-	return 0;
-}
-/* >8 End of launching function on lcore. */
+	int cnt_args_parsed;
+	uint32_t id_core;
+	uint32_t cnt_ports;
 
-/* Initialization of Environment Abstraction Layer (EAL). 8< */
-int
-main(int argc, char **argv)
-{
-	int ret;
-	unsigned lcore_id;
+	/* Init runtime environment */
+	cnt_args_parsed = rte_eal_init(argc, argv);
+	if (cnt_args_parsed < 0)
+		rte_exit(EXIT_FAILURE, "rte_eal_init(): Failed");
 
-	ret = rte_eal_init(argc, argv);
-	if (ret < 0)
-		rte_panic("Cannot init EAL\n");
-	/* >8 End of initialization of Environment Abstraction Layer */
-
-	uint16_t portid = 0;
-	RTE_ETH_FOREACH_DEV(portid){
-		struct rte_eth_dev_info dev_info;
-		if (rte_eth_dev_info_get(portid, &dev_info) == 0)
-		{
-			printf("port %u... %s\n", portid, dev_info.driver_name);
-		}
-	}
-
-	/* Launches the function on each lcore. 8< */
-	RTE_LCORE_FOREACH_WORKER(lcore_id) {
-		/* Simpler equivalent. 8< */
-		rte_eal_remote_launch(lcore_hello, NULL, lcore_id);
-		/* >8 End of simpler equivalent. */
-	}
-
-	/* call it on main lcore too */
-	lcore_hello(NULL);
-	/* >8 End of launching the function on each lcore. */
-
-	rte_eal_mp_wait_lcore();
+	cnt_ports = rte_eth_dev_count_avail();
+	printf("Number of NICs: %i\n", cnt_ports);
 
 	/* clean up the EAL */
 	rte_eal_cleanup();
