@@ -46,7 +46,6 @@ int main(int argc, char **argv){
 		MTCP_SKELETON_ERROR_MESSAGE("failed to init mtcp")
 		goto free_server_config;
 	}
-    
     MTCP_SKELETON_INFO_MESSAGE("initialized mtcp stack")
 
     // add to global server config
@@ -64,7 +63,7 @@ int main(int argc, char **argv){
     }
 
     // create and join thread
-    run_threads(mtcp_server_thread, thread_args);
+    run_threads(epoll_server_thread, thread_args);
     
 destroy_mtcp:
     mtcp_destroy();

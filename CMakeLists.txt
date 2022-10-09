@@ -68,7 +68,7 @@ file(GLOB_RECURSE SRC_LEGACY_CLIENT ${PATH_SAMPLE_CLIENT_SRC}/*.c)
 add_executable(sample_legacy_client ${SRC_LEGACY_CLIENT})
 
 # mtcp server code
-SET(PATH_SAMPLE_MTCP_SERVER_SRC ${PATH_SAMPLE_SRC}/mtcp_server)
+SET(PATH_SAMPLE_MTCP_SERVER_SRC ${PATH_SAMPLE_SRC}/epoll_server)
 file(GLOB_RECURSE SRC_MTCP_SERVER ${PATH_SAMPLE_MTCP_SERVER_SRC}/*.c)
 add_executable(sample_mtcp_server ${SRC_MTCP_SERVER})
 
