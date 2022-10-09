@@ -78,6 +78,9 @@ sudo ./dpdk_iface_main
 
 # config interface ip address (for Intel NIC)
 sudo ifconfig dpdk0 10.0.20.2 netmask 255.255.255.0 up
+
+# delete interface ip (for Intel NIC)
+sudo ip addr flush dev dpdk0
 ```
 
 ## Build this project

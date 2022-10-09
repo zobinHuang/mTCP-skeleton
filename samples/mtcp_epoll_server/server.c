@@ -116,7 +116,7 @@ int _create_listen_socket(epoll_server_thread_context *ctx){
 	// bind socket
 	struct sockaddr_in server_addr;
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = INADDR_ANY;
+	server_addr.sin_addr.s_addr = inet_addr(SOCKET_IP);
 	server_addr.sin_port = htons(SOCKET_PORT);
 	ret = mtcp_bind(ctx->mtcp_context, sock, 
 			(struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
@@ -125,6 +125,8 @@ int _create_listen_socket(epoll_server_thread_context *ctx){
 			"failed bind created socket to port %d", SOCKET_PORT)
 		goto close_socket;
 	}
+	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+		"bind to address %s:%d", SOCKET_IP, SOCKET_PORT)
 
 	// listen
 	ret = mtcp_listen(ctx->mtcp_context, sock, config->backlog);
@@ -182,9 +184,11 @@ void _close_connection(epoll_server_thread_context *ctx, int sock){
  */
 int _accept_connection(epoll_server_thread_context *ctx, int listen_sock){
 	// accept
+	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+		"Try to accept connection")
 	int new_sock = mtcp_accept(ctx->mtcp_context, listen_sock, NULL, NULL);
 
-	// check whether valied
+	// check whether valid
 	if(new_sock >= 0){
 		// check whether exceed the number of maximum number of flows
 		if(new_sock >= EPOLL_MAX_EVENTS){
@@ -264,10 +268,9 @@ void* epoll_server_thread(void *arg){
 		
 		// process epoll error
 		if(num_events < 0){
-			if(errno != EINTR){
+			if(errno != EINTR)
 				MTCP_SKELETON_ERROR_ERRNO_THREAD(ctx->core,errno)
-				goto free_listen_socket;
-			}
+			goto free_listen_socket;
 		}
 
 		bool waiting_acception = false;
