@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.16.3)
 # project info
 project(mTCPapp LANGUAGES C)
 
+# cflags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -msse2")
+
 # set executable output path
 set(PATH_EXECUTABLE bin)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ../${PATH_EXECUTABLE})

@@ -20,14 +20,17 @@
 int init_socket(){
 	// create socket for listening
 	int sock;
+    int option = 1;
 	sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0){
         MTCPAPP_ERROR_ERRNO(errno)
 		return -1;
     }
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 
 	// bind local address
     struct sockaddr_in client_addr;
+    client_addr.sin_family = AF_INET;
     client_addr.sin_addr.s_addr = inet_addr(SOCKET_CLIENT_IP);
     client_addr.sin_port = htons(SOCKET_CLIENT_PORT);
     int ret = bind(sock, (struct sockaddr*)&client_addr, sizeof(client_addr));

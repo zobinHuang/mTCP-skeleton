@@ -27,24 +27,25 @@ MODULE_INFO(retpoline, "Y");
 
 static const struct modversion_info ____versions[]
 __used __section("__versions") = {
-	{ 0xcb440b5e, "module_layout" },
+	{ 0xe49bb82b, "module_layout" },
 	{ 0x6bc3fbc0, "__unregister_chrdev" },
-	{ 0xb9b2940c, "__register_chrdev" },
+	{ 0x7a7b2bd8, "__register_chrdev" },
 	{ 0x6b10bee1, "_copy_to_user" },
 	{ 0xd0da656b, "__stack_chk_fail" },
 	{ 0xbcab6ee6, "sscanf" },
-	{ 0x6c0888f4, "register_netdev" },
-	{ 0x9ca14e85, "alloc_etherdev_mqs" },
+	{ 0x5537e52b, "register_netdev" },
+	{ 0xdffc8831, "alloc_etherdev_mqs" },
 	{ 0xe2d5255a, "strcmp" },
 	{ 0xfe8c61f0, "_raw_read_lock" },
 	{ 0x13c49cc2, "_copy_from_user" },
-	{ 0xa715db6d, "free_netdev" },
-	{ 0x9a1f7f85, "unregister_netdev" },
-	{ 0x6e06a909, "init_net" },
+	{ 0x5a992ca6, "free_netdev" },
+	{ 0xe7c57927, "unregister_netdev" },
+	{ 0xf3463887, "init_net" },
 	{ 0xe68efe41, "_raw_write_lock" },
 	{ 0xa5976e4f, "dev_base_lock" },
 	{ 0x92997ed8, "_printk" },
 	{ 0x87a21cb3, "__ubsan_handle_out_of_bounds" },
+	{ 0x5b8239ca, "__x86_return_thunk" },
 	{ 0xbdfb6dbb, "__fentry__" },
 };
 

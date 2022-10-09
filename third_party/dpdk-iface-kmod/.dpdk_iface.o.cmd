@@ -1,4 +1,4 @@
-cmd_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := gcc -Wp,-MMD,/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/.dpdk_iface.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/8/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -I./ubuntu/include -include ./include/linux/compiler_types.h -D__KERNEL__ -fmacro-prefix-map=./= -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Wno-format-security -std=gnu89 -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -fcf-protection=none -m64 -falign-jumps=1 -falign-loops=1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup -mtune=generic -mno-red-zone -mcmodel=kernel -DCONFIG_X86_X32_ABI -Wno-sign-compare -fno-asynchronous-unwind-tables -mindirect-branch=thunk-extern -mindirect-branch-register -fno-jump-tables -fno-delete-null-pointer-checks -Wno-frame-address -Wno-format-truncation -Wno-format-overflow -O2 --param=allow-store-data-races=0 -Wframe-larger-than=1024 -fstack-protector-strong -Wimplicit-fallthrough=5 -Wno-main -Wno-unused-but-set-variable -Wno-unused-const-variable -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-clash-protection -g -pg -mrecord-mcount -mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement -Wvla -Wno-pointer-sign -Wno-stringop-truncation -Wno-array-bounds -Wno-stringop-overflow -Wno-restrict -Wno-maybe-uninitialized -fno-strict-overflow -fno-stack-check -fconserve-stack -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wno-packed-not-aligned  -fsanitize=bounds -fsanitize=shift -fsanitize=bool -fsanitize=enum  -DMODULE  -DKBUILD_BASENAME='"dpdk_iface"' -DKBUILD_MODNAME='"dpdk_iface"' -D__KBUILD_MODNAME=kmod_dpdk_iface -c -o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.c
+cmd_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := gcc -Wp,-MMD,/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/.dpdk_iface.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/9/include -I./arch/x86/include -I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -I./ubuntu/include -include ./include/linux/compiler_types.h -D__KERNEL__ -fmacro-prefix-map=./= -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE -Werror=implicit-function-declaration -Werror=implicit-int -Werror=return-type -Wno-format-security -std=gnu89 -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -fcf-protection=none -m64 -falign-jumps=1 -falign-loops=1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mskip-rax-setup -mtune=generic -mno-red-zone -mcmodel=kernel -DCONFIG_X86_X32_ABI -Wno-sign-compare -fno-asynchronous-unwind-tables -mindirect-branch=thunk-extern -mindirect-branch-register -mfunction-return=thunk-extern -fno-jump-tables -fno-delete-null-pointer-checks -Wno-frame-address -Wno-format-truncation -Wno-format-overflow -Wno-address-of-packed-member -O2 --param=allow-store-data-races=0 -Wframe-larger-than=1024 -fstack-protector-strong -Wimplicit-fallthrough=5 -Wno-main -Wno-unused-but-set-variable -Wno-unused-const-variable -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-stack-clash-protection -g -pg -mrecord-mcount -mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement -Wvla -Wno-pointer-sign -Wno-stringop-truncation -Wno-array-bounds -Wno-stringop-overflow -Wno-restrict -Wno-maybe-uninitialized -fno-strict-overflow -fno-stack-check -fconserve-stack -Werror=date-time -Werror=incompatible-pointer-types -Werror=designated-init -Wno-packed-not-aligned  -fsanitize=bounds -fsanitize=shift -fsanitize=bool -fsanitize=enum  -DMODULE  -DKBUILD_BASENAME='"dpdk_iface"' -DKBUILD_MODNAME='"dpdk_iface"' -D__KBUILD_MODNAME=kmod_dpdk_iface -c -o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.c
 
 source_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := /home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.c
 
@@ -212,6 +212,8 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
     $(wildcard include/config/TRIM_UNUSED_KSYMS) \
   arch/x86/include/asm/linkage.h \
     $(wildcard include/config/X86_ALIGNMENT_16) \
+    $(wildcard include/config/RETHUNK) \
+    $(wildcard include/config/SLS) \
   include/linux/bitops.h \
   include/linux/typecheck.h \
   include/uapi/linux/kernel.h \
@@ -246,6 +248,7 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
     $(wildcard include/config/X86_INTEL_MEMORY_PROTECTION_KEYS) \
     $(wildcard include/config/X86_5LEVEL) \
     $(wildcard include/config/PAGE_TABLE_ISOLATION) \
+    $(wildcard include/config/CPU_UNRET_ENTRY) \
     $(wildcard include/config/X86_SGX) \
   include/asm-generic/bitops/const_hweight.h \
   include/asm-generic/bitops/instrumented-atomic.h \
@@ -358,6 +361,7 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
     $(wildcard include/config/X86) \
   include/uapi/video/edid.h \
   arch/x86/include/asm/nospec-branch.h \
+    $(wildcard include/config/CPU_IBPB_ENTRY) \
   include/linux/static_key.h \
   include/linux/objtool.h \
   arch/x86/include/asm/msr-index.h \
@@ -559,8 +563,8 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
   include/linux/timex.h \
   include/uapi/linux/timex.h \
   arch/x86/include/asm/timex.h \
-  arch/x86/include/asm/tsc.h \
     $(wildcard include/config/X86_TSC) \
+  arch/x86/include/asm/tsc.h \
   include/vdso/time32.h \
   include/vdso/time.h \
   include/linux/jiffies.h \
@@ -957,6 +961,7 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
   include/uapi/linux/ioprio.h \
   include/linux/fs_types.h \
   include/linux/mount.h \
+  include/linux/mnt_idmapping.h \
   include/uapi/linux/fs.h \
   include/linux/quota.h \
     $(wildcard include/config/QUOTA_NETLINK_INTERFACE) \
@@ -1075,6 +1080,7 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
   include/linux/irqnr.h \
   include/uapi/linux/irqnr.h \
   include/linux/prandom.h \
+  include/linux/siphash.h \
   arch/x86/include/asm/archrandom.h \
   include/linux/sockptr.h \
   include/uapi/linux/net.h \
@@ -1124,7 +1130,6 @@ deps_/home/zobin/projects/mTCP-app/third_party/dpdk-iface-kmod/dpdk_iface.o := \
   include/linux/in6.h \
   include/uapi/linux/in6.h \
   include/uapi/linux/libc-compat.h \
-  include/linux/siphash.h \
   include/uapi/linux/if_ether.h \
   include/linux/splice.h \
   include/linux/pipe_fs_i.h \

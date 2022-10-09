@@ -64,3 +64,61 @@ make
 ```
 
 After that the executable will be build and put under `bin`
+
+## Configure file for mtcp
+
+We need to setup the configuration for routin and arp for MTCP
+
+```bash
+# get into bin
+cd bin
+
+# create config directory
+mkdir config
+
+# create config file
+touch route.conf
+touch arp.conf
+```
+
+Inside `route.conf`, we add:
+
+```bash
+# This file is routing table example of our testbed machine
+# Copy this file to route.conf and give appropriate routes
+# Please save this file as config/route.conf. Put the config/
+# directory in the same directory where the binary lies.
+#
+# (Destination address)/(Prefix) (Device name)
+#
+#
+# Add entry for default gateway route as:
+# w.x.y.z/0 dpdk0
+# Always put the default gateway route as the last entry.
+# Make sure that the mask (Prefix) is set to 0. For example,
+# if the default gateway IP address is 10.0.0.10, then the
+# entry will be:
+# 10.0.0.10/0 dpdk0
+#
+
+ROUTES 1
+#192.168.3.1/24 dpdk0
+10.0.20.0/24 0000:06:11.0
+#10.0.0.2/24 ens38f1np1
+```
+
+Inside `arp.conf`, we add:
+
+```bash
+# This file is to configure static arp tables.
+# Rename this file to arp.conf and set the appropriate values.
+# Please save this file as config/arp.conf. Put the config/
+# directory in the same directory where the binary lies.
+#
+# (Destination IP address/IP_prefix) (Destination MAC address)
+
+ARP_ENTRY 2
+#192.168.3.1/24 ac:1f:6b:b3:17:5f
+10.0.20.1/24 b8:59:9f:c6:50:bb
+10.0.20.2/24 00:1b:21:bc:26:84
+```
