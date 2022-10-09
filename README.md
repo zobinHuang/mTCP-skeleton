@@ -1,8 +1,6 @@
 # mTCP-skeleton
 
-This repo contains a epoll server/client communication program built based on mTCP with the support of DPDK 21.11.
-
-TODO: Memcached transparent
+This repo provides skeleton application based on mTCP-DPDK 21.11, sample applications are also provided to demonstrate the code flow.
 
 ## Preparation
 
@@ -83,7 +81,7 @@ sudo ifconfig dpdk0 10.0.20.2 netmask 255.255.255.0 up
 sudo ip addr flush dev dpdk0
 ```
 
-## Build this project
+### 5. Build this project
 
 To Build this project, run:
 
@@ -101,7 +99,7 @@ make
 
 After that the executable will be build and put under `bin`
 
-## Configure file for mtcp
+### 6. Configure file for mtcp
 
 We need to setup the configuration for routin and arp for MTCP
 
@@ -157,4 +155,16 @@ ARP_ENTRY 2
 #192.168.3.1/24 ac:1f:6b:b3:17:5f
 10.0.20.1/24 b8:59:9f:c6:50:bb
 10.0.20.2/24 00:1b:21:bc:26:84
+```
+
+## Run
+
+Take `sample_mtcp_epoll_server` sample as an example, to run it we type:
+
+```bash
+# get into the binary path
+cd bin
+
+# run epoll server
+sudo ./sample_mtcp_epoll_server -f ../conf/epserver.conf -n 8
 ```
