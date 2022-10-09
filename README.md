@@ -6,15 +6,17 @@ TODO: Memcached transparent
 
 ## Preparation
 
-0. Install dependencies
+### 0. Install dependencies
 
 ```bash
 sudo apt-get install automake
 ```
 
-1. Make sure the header and library of DPDK 21.11 are installed correctly in your machine [ See <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">Installation of DPDK 21.11</a> for more details ];
+### 1. Build, intsall and config DPDK 21.11 
 
-2. Compiling mTCP based on DPDK 21.11
+Make sure the header and library of DPDK 21.11 are installed correctly in your machine [ See <a href="https://zobinhuang.github.io/sec_learning/Tech_System_And_Network/DPDK_1_Installation/">Installation of DPDK 21.11</a> for more details ];
+
+### 2. Compiling mTCP based on DPDK 21.11
 
 To build mTCP, run:
 
@@ -37,7 +39,7 @@ To clean all build files of mtcp, run:
 make distclean
 ```
 
-3. Build `libevent-2.1.10`
+### 3. Build `libevent-2.1.10`
 
 ```bash
 # enter the libevent subdirectory
@@ -56,7 +58,7 @@ make
 cd ../..
 ```
 
-4. Build `dpdk-iface-kmod` kernel module
+### 4. Build `dpdk-iface-kmod` kernel module
 
 ```bash
 # move to the root path of dpdk-iface-kmod
