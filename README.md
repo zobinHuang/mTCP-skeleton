@@ -7,7 +7,7 @@ This repo provides skeleton application based on mTCP-DPDK 21.11, sample applica
 ### 0. Install dependencies
 
 ```bash
-sudo apt-get install automake
+sudo apt-get install automake libgmp-dev
 ```
 
 ### 1. Build, intsall and config DPDK 21.11 
@@ -39,9 +39,18 @@ make distclean
 
 ### 3. Build `libevent-2.1.10`
 
+firstly we need to install dependencies of 
+
 ```bash
-# enter the libevent subdirectory
-cd third_party/libevent
+sudo apt-get install openssl libssl-dev
+```
+
+```bash
+# decompress and enter the libevent subdirectory
+cd third_party
+tar -zxvf libevent-2.1.10-stable.tar.gz
+mv libevent-2.1.10-stable libevent
+cd libevent
 
 # make build subdirectory and enter it
 mkdir build && cd build
@@ -109,6 +118,7 @@ cd bin
 
 # create config directory
 mkdir config
+cd config
 
 # create config file
 touch route.conf
