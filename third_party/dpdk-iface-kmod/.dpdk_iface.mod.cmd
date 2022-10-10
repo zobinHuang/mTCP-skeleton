@@ -1,1 +1,0 @@
-cmd_/root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/dpdk_iface.mod := { echo  /root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/dpdk_iface.o;  echo; } > /root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/dpdk_iface.mod
