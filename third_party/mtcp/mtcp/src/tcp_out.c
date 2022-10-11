@@ -14,7 +14,9 @@
 
 #define TCP_CALCULATE_CHECKSUM      TRUE
 #define ACK_PIGGYBACK				TRUE
-#define TRY_SEND_BEFORE_QUEUE		FALSE
+#define TRY_SEND_BEFORE_QUEUE		TRUE
+
+#define DISABLE_HWCSUM
 
 #define TCP_MAX_WINDOW 65535
 
@@ -302,7 +304,9 @@ SendTCPPacket(struct mtcp_manager *mtcp, tcp_stream *cur_stream,
 	}
 
 	window32 = cur_stream->rcvvar->rcv_wnd >> wscale;
+	TRACE_CONFIG("calculated window %u\n", window32);
 	tcph->window = htons((uint16_t)MIN(window32, TCP_MAX_WINDOW));
+	TRACE_CONFIG("advised window %u\n", tcph->window);
 	/* if the advertised window is 0, we need to advertise again later */
 	if (window32 == 0) {
 		cur_stream->need_wnd_adv = TRUE;
@@ -978,6 +982,7 @@ AddtoControlList(mtcp_manager_t mtcp, tcp_stream *cur_stream, uint32_t cur_ts)
 	ret = SendControlPacket(mtcp, cur_stream, cur_ts);
 	if (ret < 0) {
 #endif
+		TRACE_CONFIG("failed sending control packet\n");
 		if (!cur_stream->sndvar->on_control_list) {
 			struct mtcp_sender *sender = GetSender(mtcp, cur_stream);
 			assert(sender != NULL);

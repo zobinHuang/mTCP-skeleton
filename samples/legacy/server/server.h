@@ -8,7 +8,7 @@
 // socket config
 #define SOCKET_MAX_NUM          50
 #define SOCKET_RECV_BUF_SIZE    128
-#define SOCKET_SERVER_IP        "10.0.20.2"
+#define SOCKET_SERVER_IP        "10.0.109.2"
 #define SOCKET_SERVER_PORT      10000
 
 int init_epoll();

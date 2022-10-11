@@ -58,11 +58,11 @@ epoll_server_thread_context* _init_thread(void *arg){
 	}
 	
 	// affinitize application thread to a CPU core
-	// #if HT_SUPPORT
-	// 	mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
-	// #else
-	// 	mtcp_core_affinitize(ctx->core);
-	// #endif
+	#if HT_SUPPORT
+		mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
+	#else
+		mtcp_core_affinitize(ctx->core);
+	#endif
 
 	// create mtcp context, this will spawn an mtcp thread
 	ctx->mtcp_context = mtcp_create_context(ctx->core);
@@ -124,11 +124,11 @@ int _create_listen_socket(epoll_server_thread_context *ctx){
 			(struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
 	if (ret < 0) {
 		MTCP_SKELETON_ERROR_MESSAGE_THREAD(ctx->core,
-			"failed bind created socket to port %d", SOCKET_PORT)
+			"failed bind created socket to port %d", server_addr.sin_port)
 		goto close_socket;
 	}
 	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
-		"bind to address %s:%d", SOCKET_IP, SOCKET_PORT)
+		"bind to address %s:%d", SOCKET_IP, server_addr.sin_port)
 
 	// listen
 	ret = mtcp_listen(ctx->mtcp_context, sock, config->backlog);

@@ -10,6 +10,7 @@
 
 #define ETH_P_IP_FRAG   0xF800
 #define ETH_P_IPV6_FRAG 0xF6DD
+#define DISABLE_HWCSUM
 
 /*----------------------------------------------------------------------------*/
 inline int 
@@ -51,8 +52,10 @@ ProcessIPv4Packet(mtcp_manager_t mtcp, uint32_t cur_ts,
 	
 	switch (iph->protocol) {
 		case IPPROTO_TCP:
+			TRACE_CONFIG("It's a TCP Packet\n");
 			return ProcessTCPPacket(mtcp, cur_ts, ifidx, iph, ip_len);
 		case IPPROTO_ICMP:
+			TRACE_CONFIG("It's a ICMP Packet\n");
 			return ProcessICMPPacket(mtcp, iph, ip_len);
 		default:
 			/* currently drop other protocols */

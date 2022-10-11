@@ -34,13 +34,16 @@ ProcessPacket(mtcp_manager_t mtcp, const int ifidx,
 
 	if (ip_proto == ETH_P_IP) {
 		/* process ipv4 packet */
+		TRACE_CONFIG("It's an IPv4 Packet.\n");
 		ret = ProcessIPv4Packet(mtcp, cur_ts, ifidx, pkt_data, len);
 
 	} else if (ip_proto == ETH_P_ARP) {
+		TRACE_CONFIG("It's an ARP Packet.\n");
 		ProcessARPPacket(mtcp, cur_ts, ifidx, pkt_data, len);
 		return TRUE;
 
 	} else {
+		TRACE_CONFIG("Unregonized Packet.\n");
 		//DumpPacket(mtcp, (char *)pkt_data, len, "??", ifidx);
 		mtcp->iom->release_pkt(mtcp->ctx, ifidx, pkt_data, len);
 		return TRUE;

@@ -1,6 +1,9 @@
 #include <assert.h>
 #include <time.h>
 #include <inttypes.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include "tcp_util.h"
 #include "tcp_in.h"
@@ -18,6 +21,7 @@
 #define MAX(a, b) ((a)>(b)?(a):(b))
 #define MIN(a, b) ((a)<(b)?(a):(b))
 
+#define DISABLE_HWCSUM
 #define VERIFY_RX_CHECKSUM TRUE
 #define RECOVERY_AFTER_LOSS TRUE
 #define SELECTIVE_WRITE_EVENT_NOTIFY TRUE
@@ -33,15 +37,24 @@ FilterSYNPacket(mtcp_manager_t mtcp, uint32_t ip, uint16_t port)
 
 	/* if not the address we want, drop */
 	listener = (struct tcp_listener *)ListenerHTSearch(mtcp->listeners, &port);
-	if (listener == NULL)	return FALSE;
-
+	if (listener == NULL){
+		TRACE_CONFIG("No listeners for port %u, dropped\n", port);
+		return FALSE;
+	} else {
+		TRACE_CONFIG("Found listeners for port %u\n", port);
+	}
+		
 	addr = &listener->socket->saddr;
 
 	if (addr->sin_port == port) {
+		
 		if (addr->sin_addr.s_addr != INADDR_ANY) {
 			if (ip == addr->sin_addr.s_addr) {
 				return TRUE;
 			}
+			TRACE_CONFIG(
+				"Not the ip we listen, our ip: %s, coming port: %u\n", 
+				inet_ntoa(addr->sin_addr), ip);
 			return FALSE;
 		} else {
 			int i;
@@ -51,9 +64,11 @@ FilterSYNPacket(mtcp_manager_t mtcp, uint32_t ip, uint16_t port)
 					return TRUE;
 				}
 			}
+			TRACE_CONFIG("We don't have device with ip address %u\n", ip);
 			return FALSE;
 		}
 	}
+	TRACE_CONFIG("Not the port we listen, our port: %u, coming port: %u\n", addr->sin_port, port);
 
 	return FALSE;
 }
@@ -685,6 +700,7 @@ CreateNewFlowHTEntry(mtcp_manager_t mtcp, uint32_t cur_ts, const struct iphdr *i
 		/* handle the SYN */
 		ret = FilterSYNPacket(mtcp, iph->daddr, tcph->dest);
 		if (!ret) {
+			TRACE_INFO("Refusing SYN packet.\n");
 			TRACE_DBG("Refusing SYN packet.\n");
 #ifdef DBGMSG
 			DumpIPPacket(mtcp, iph, ip_len);
@@ -701,6 +717,7 @@ CreateNewFlowHTEntry(mtcp_manager_t mtcp, uint32_t cur_ts, const struct iphdr *i
 		cur_stream = HandlePassiveOpen(mtcp, 
 				cur_ts, iph, tcph, seq, window);
 		if (!cur_stream) {
+			TRACE_INFO("Not available space in flow pool.\n");
 			TRACE_DBG("Not available space in flow pool.\n");
 #ifdef DBGMSG
 			DumpIPPacket(mtcp, iph, ip_len);
@@ -715,6 +732,7 @@ CreateNewFlowHTEntry(mtcp_manager_t mtcp, uint32_t cur_ts, const struct iphdr *i
 
 		return cur_stream;
 	} else if (tcph->rst) {
+		TRACE_INFO("Reset packet comes\n");
 		TRACE_DBG("Reset packet comes\n");
 #ifdef DBGMSG
 		DumpIPPacket(mtcp, iph, ip_len);
@@ -722,6 +740,7 @@ CreateNewFlowHTEntry(mtcp_manager_t mtcp, uint32_t cur_ts, const struct iphdr *i
 		/* for the reset packet, just discard */
 		return NULL;
 	} else {
+		TRACE_INFO("Weird packet comes\n");
 		TRACE_DBG("Weird packet comes.\n");
 #ifdef DBGMSG
 		DumpIPPacket(mtcp, iph, ip_len);
@@ -754,9 +773,12 @@ Handle_TCP_ST_LISTEN (mtcp_manager_t mtcp, uint32_t cur_ts,
 		if (cur_stream->state == TCP_ST_LISTEN)
 			cur_stream->rcv_nxt++;
 		cur_stream->state = TCP_ST_SYN_RCVD;
+		TRACE_CONFIG("Stream %d: TCP_ST_SYN_RCVD\n", cur_stream->id);
 		TRACE_STATE("Stream %d: TCP_ST_SYN_RCVD\n", cur_stream->id);
 		AddtoControlList(mtcp, cur_stream, cur_ts);
 	} else {
+		TRACE_CONFIG("Stream %d (TCP_ST_LISTEN): "
+				"Packet without SYN.\n", cur_stream->id);
 		CTRACE_ERROR("Stream %d (TCP_ST_LISTEN): "
 				"Packet without SYN.\n", cur_stream->id);
 	}
@@ -1217,6 +1239,10 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 	int ret;
 	int rc = -1;
 
+	if(tcph->syn){
+		TRACE_CONFIG("it's an syn packet\n");
+	}
+
 	/* Check ip packet invalidation */	
 	if (ip_len < ((iph->ihl + tcph->doff) << 2))
 		return ERROR;
@@ -1253,8 +1279,18 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 		/* not found in flow table */
 		cur_stream = CreateNewFlowHTEntry(mtcp, cur_ts, iph, ip_len, tcph, 
 				seq, ack_seq, payloadlen, window);
-		if (!cur_stream)
+		if (!cur_stream){
+			TRACE_CONFIG("Failed to create hash table entry\n");
 			return TRUE;
+		} else {
+			TRACE_CONFIG("Create Hash Table Entry:%u\nsp:%u;\ndp:%u\n",
+				cur_stream->id,
+				tcph->source,
+				tcph->dest
+			);
+		}
+	} else {
+		TRACE_CONFIG("Found Hash Table Entry for dest port %u\n", tcph->dest);
 	}
 
 	/* Validate sequence. if not valid, ignore the packet */
@@ -1262,6 +1298,8 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 		ret = ValidateSequence(mtcp, cur_stream, 
 				cur_ts, tcph, seq, ack_seq, payloadlen);
 		if (!ret) {
+			TRACE_CONFIG("Stream %d: Unexpected sequence: %u, expected: %u\n",
+					cur_stream->id, seq, cur_stream->rcv_nxt);
 			TRACE_DBG("Stream %d: Unexpected sequence: %u, expected: %u\n",
 					cur_stream->id, seq, cur_stream->rcv_nxt);
 #ifdef DBGMSG
@@ -1297,19 +1335,23 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 
 	switch (cur_stream->state) {
 	case TCP_ST_LISTEN:
+		TRACE_CONFIG("TCP Status Listen\n");
 		Handle_TCP_ST_LISTEN(mtcp, cur_ts, cur_stream, tcph);
 		break;
 
 	case TCP_ST_SYN_SENT:
+		TRACE_CONFIG("TCP Status SYN Sent\n");
 		Handle_TCP_ST_SYN_SENT(mtcp, cur_ts, cur_stream, iph, tcph, 
 				seq, ack_seq, payloadlen, window);
 		break;
 
 	case TCP_ST_SYN_RCVD:
+		TRACE_CONFIG("TCP Status SYN Rcvd\n");
 		/* SYN retransmit implies our SYN/ACK was lost. Resend */
-		if (tcph->syn && seq == cur_stream->rcvvar->irs)
+		if (tcph->syn && seq == cur_stream->rcvvar->irs){
+			TRACE_CONFIG("Resend SYN/ACK\n");
 			Handle_TCP_ST_LISTEN(mtcp, cur_ts, cur_stream, tcph);
-		else {
+		} else {
 			Handle_TCP_ST_SYN_RCVD(mtcp, cur_ts, cur_stream, tcph, ack_seq);
 			if (payloadlen > 0 && cur_stream->state == TCP_ST_ESTABLISHED) {
 				Handle_TCP_ST_ESTABLISHED(mtcp, cur_ts, cur_stream, tcph,
@@ -1320,36 +1362,43 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 		break;
 
 	case TCP_ST_ESTABLISHED:
+		TRACE_CONFIG("TCP Status Established");
 		Handle_TCP_ST_ESTABLISHED(mtcp, cur_ts, cur_stream, tcph, 
 				seq, ack_seq, payload, payloadlen, window);
 		break;
 
 	case TCP_ST_CLOSE_WAIT:
+		TRACE_CONFIG("TCP Status Close Wait");
 		Handle_TCP_ST_CLOSE_WAIT(mtcp, cur_ts, cur_stream, tcph, seq, ack_seq,
 				payloadlen, window);
 		break;
 
 	case TCP_ST_LAST_ACK:
+		TRACE_CONFIG("TCP Status Last ACK");
 		Handle_TCP_ST_LAST_ACK(mtcp, cur_ts, iph, ip_len, cur_stream, tcph, 
 				seq, ack_seq, payloadlen, window);
 		break;
 	
 	case TCP_ST_FIN_WAIT_1:
+		TRACE_CONFIG("TCP Status FIN Wait 1");
 		Handle_TCP_ST_FIN_WAIT_1(mtcp, cur_ts, cur_stream, tcph, seq, ack_seq,
 				payload, payloadlen, window);
 		break;
 
 	case TCP_ST_FIN_WAIT_2:
+		TRACE_CONFIG("TCP Status FIN Wait 2");
 		Handle_TCP_ST_FIN_WAIT_2(mtcp, cur_ts, cur_stream, tcph, seq, ack_seq, 
 				payload, payloadlen, window);
 		break;
 
 	case TCP_ST_CLOSING:
+		TRACE_CONFIG("TCP Status Closing");
 		Handle_TCP_ST_CLOSING(mtcp, cur_ts, cur_stream, tcph, seq, ack_seq,
 				payloadlen, window);
 		break;
 
 	case TCP_ST_TIME_WAIT:
+		TRACE_CONFIG("TCP Status Time Wait");
 		/* the only thing that can arrive in this state is a retransmission 
 		   of the remote FIN. Acknowledge it, and restart the 2 MSL timeout */
 		if (cur_stream->on_timewait_list) {
@@ -1360,6 +1409,7 @@ ProcessTCPPacket(mtcp_manager_t mtcp,
 		break;
 
 	case TCP_ST_CLOSED:
+		TRACE_CONFIG("TCP Status Closed");
 		break;
 
 	}

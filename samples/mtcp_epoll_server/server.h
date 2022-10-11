@@ -9,7 +9,7 @@
 
 #define HT_SUPPORT  false
 
-#define EPOLL_MAX_EVENTS 1024
+#define EPOLL_MAX_EVENTS 100
 #define EPOLL_TIMEOUT -1
 
 #define SOCKET_IP   "10.0.109.2"

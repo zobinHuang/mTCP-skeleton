@@ -98,29 +98,50 @@ unsigned char *
 GetDestinationHWaddr(uint32_t dip, uint8_t is_gateway)
 {
 	unsigned char *d_haddr = NULL;
-	int prefix = 0;
+	// int prefix = 0;
 	int i;
+
+	struct in_addr ip_addr;
+	ip_addr.s_addr = dip;
+	TRACE_CONFIG("We're looking for the MAC of %s\n", inet_ntoa(ip_addr));
 
 	if (is_gateway == 1 && CONFIG.arp.gateway)
 		d_haddr = (CONFIG.arp.gateway)->haddr;
 	else {	
 		/* Longest prefix matching */
 		for (i = 0; i < CONFIG.arp.entries; i++) {
-			if (CONFIG.arp.entry[i].prefix == 1) {
-				if (CONFIG.arp.entry[i].ip == dip) {
-					d_haddr = CONFIG.arp.entry[i].haddr;
-					break;
-				}	
-			} else {
-				if ((dip & CONFIG.arp.entry[i].ip_mask) ==
-				    CONFIG.arp.entry[i].ip_masked) {
+    		ip_addr.s_addr = CONFIG.arp.entry[i].ip;
+			TRACE_CONFIG("Found ARP Entries: IP: %s, MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+				inet_ntoa(ip_addr),
+				CONFIG.arp.entry[i].haddr[0], CONFIG.arp.entry[i].haddr[1], 
+				CONFIG.arp.entry[i].haddr[2], CONFIG.arp.entry[i].haddr[3], 
+				CONFIG.arp.entry[i].haddr[4], CONFIG.arp.entry[i].haddr[5]
+			);
+
+			ip_addr.s_addr = dip;
+			if (CONFIG.arp.entry[i].ip == dip) {
+				TRACE_CONFIG("Match the ip we're looking for: %s\n", inet_ntoa(ip_addr));
+				d_haddr = CONFIG.arp.entry[i].haddr;
+				break;
+			}	
+
+			// if (CONFIG.arp.entry[i].prefix == 1) {
+			// 	ip_addr.s_addr = dip;
+			// 	if (CONFIG.arp.entry[i].ip == dip) {
+			// 		TRACE_CONFIG("Match the ip we're looking for: %s\n", inet_ntoa(ip_addr));
+			// 		d_haddr = CONFIG.arp.entry[i].haddr;
+			// 		break;
+			// 	}	
+			// } else {
+			// 	if ((dip & CONFIG.arp.entry[i].ip_mask) ==
+			// 	    CONFIG.arp.entry[i].ip_masked) {
 					
-					if (CONFIG.arp.entry[i].prefix > prefix) {
-						d_haddr = CONFIG.arp.entry[i].haddr;
-						prefix = CONFIG.arp.entry[i].prefix;
-					}
-				}
-			}
+			// 		if (CONFIG.arp.entry[i].prefix > prefix) {
+			// 			d_haddr = CONFIG.arp.entry[i].haddr;
+			// 			prefix = CONFIG.arp.entry[i].prefix;
+			// 		}
+			// 	}
+			// }
 		}
 	}
 	

@@ -1,8 +1,12 @@
+#include <arpa/inet.h>
+
 #include "ip_out.h"
 #include "ip_in.h"
 #include "eth_out.h"
 #include "arp.h"
 #include "debug.h"
+
+#define DISABLE_HWCSUM
 
 /*----------------------------------------------------------------------------*/
 inline int
@@ -50,6 +54,9 @@ IPOutputStandalone(struct mtcp_manager *mtcp, uint8_t protocol,
 	if (nif < 0)
 		return NULL;
 
+	struct in_addr ip_addr;
+    ip_addr.s_addr = daddr;
+	TRACE_CONFIG("Try to obtain hwaddr of %s\n", inet_ntoa(ip_addr));
 	haddr = GetDestinationHWaddr(daddr, is_external);
 	if (!haddr) {
 #if 0
@@ -62,6 +69,10 @@ IPOutputStandalone(struct mtcp_manager *mtcp, uint8_t protocol,
 			   nif, mtcp->cur_ts);
 		return NULL;
 	}
+	TRACE_CONFIG("Obtained: %02X:%02X:%02X:%02X:%02X:%02X\n",
+		haddr[0], haddr[1], 
+		haddr[2], haddr[3], 
+		haddr[4], haddr[5]);
 	
 	iph = (struct iphdr *)EthernetOutput(mtcp, 
 			ETH_P_IP, nif, haddr, payloadlen + IP_HEADER_LEN);
