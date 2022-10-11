@@ -48,6 +48,8 @@ epoll_server_thread_context* _init_thread(void *arg){
 
 	// init context
 	ctx->num_socket = 0;
+	ctx->mtcp_context = NULL;
+	ctx->mtcp_epoll = -1;
 	ctx->core = *(int*)_arg.args[0];
 	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
 		"launch sever thread");
@@ -56,11 +58,11 @@ epoll_server_thread_context* _init_thread(void *arg){
 	}
 	
 	// affinitize application thread to a CPU core
-	#if HT_SUPPORT
-		mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
-	#else
-		mtcp_core_affinitize(ctx->core);
-	#endif
+	// #if HT_SUPPORT
+	// 	mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
+	// #else
+	// 	mtcp_core_affinitize(ctx->core);
+	// #endif
 
 	// create mtcp context, this will spawn an mtcp thread
 	ctx->mtcp_context = mtcp_create_context(ctx->core);
@@ -71,7 +73,7 @@ epoll_server_thread_context* _init_thread(void *arg){
 	}
 
 	// create mtcp epoll descriptor
-	ctx->mtcp_epoll = mtcp_epoll_create(ctx->mtcp_context, EPOLL_MAX_EVENTS);
+	ctx->mtcp_epoll = mtcp_epoll_create1(ctx->mtcp_context, 0);
 	if(ctx->mtcp_epoll < 0) {
 		MTCP_SKELETON_ERROR_MESSAGE_THREAD(ctx->core,
 			"failed to create epoll descriptor");
@@ -116,7 +118,7 @@ int _create_listen_socket(epoll_server_thread_context *ctx){
 	// bind socket
 	struct sockaddr_in server_addr;
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = inet_addr(SOCKET_IP);
+	server_addr.sin_addr.s_addr = INADDR_ANY;
 	server_addr.sin_port = htons(SOCKET_PORT);
 	ret = mtcp_bind(ctx->mtcp_context, sock, 
 			(struct sockaddr *)&server_addr, sizeof(struct sockaddr_in));
@@ -135,14 +137,25 @@ int _create_listen_socket(epoll_server_thread_context *ctx){
 			"failed listen socket")
 		goto close_socket;
 	}
+	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+		"set the created socket as listen mode, backlog: %d", config->backlog)
 
 	// create epoll event
 	struct mtcp_epoll_event event;
 	event.events = MTCP_EPOLLIN;
 	event.data.sockid = sock;
-	mtcp_epoll_ctl(
-		ctx->mtcp_context, ctx->mtcp_epoll, MTCP_EPOLL_CTL_ADD, sock, &event);
-
+	if(mtcp_epoll_ctl(
+		ctx->mtcp_context, 
+		ctx->mtcp_epoll, 
+		MTCP_EPOLL_CTL_ADD, 
+		sock, 
+		&event)<0
+	){
+		MTCP_SKELETON_ERROR_MESSAGE_THREAD(ctx->core,
+			"failed add MTCP_EPOLLIN event to the listen socket")
+		goto close_socket;
+	}
+	
 	return sock;
 
 close_socket:
@@ -257,12 +270,16 @@ void* epoll_server_thread(void *arg){
 
 	// create listen socket
 	int listen_sock = _create_listen_socket(ctx);
-	if(listen_sock == -1)
+	if(listen_sock < 0)
 		goto free_mtcp_event;
+	MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+		"finish create and config the listen socket, enter epoll loop")
 
 	// thread epoll loop
 	int num_events = 0;
 	while(!thread_dones[ctx->core]){
+		MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+			"listen socket: %d, epoll: %d", listen_sock, ctx->mtcp_epoll)
 		num_events = mtcp_epoll_wait(
 			ctx->mtcp_context, ctx->mtcp_epoll, events, EPOLL_MAX_EVENTS, EPOLL_TIMEOUT);
 		
@@ -280,6 +297,8 @@ void* epoll_server_thread(void *arg){
 			if(events[i].data.sockid == listen_sock){
 				// acception event, lazy processed
 				waiting_acception = true;
+				MTCP_SKELETON_INFO_MESSAGE_THREAD(ctx->core,
+					"detect connect event, delay to process it")
 			} else if(events[i].events & MTCP_EPOLLERR){
 				// report error
 				MTCP_SKELETON_WARNING_MESSAGE_THREAD(ctx->core,

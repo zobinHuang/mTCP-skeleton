@@ -110,7 +110,7 @@ After that the executable will be build and put under `bin`
 
 ### 6. Configure file for mtcp
 
-We need to setup the configuration for routin and arp for MTCP
+We need to setup the configuration for rout and arp for MTCP
 
 ```bash
 # get into bin

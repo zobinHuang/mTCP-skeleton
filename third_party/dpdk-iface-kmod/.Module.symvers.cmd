@@ -1,0 +1,1 @@
+cmd_/root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/Module.symvers := sed 's/\.ko$$/\.o/' /root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/modules.order | scripts/mod/modpost -m -a  -o /root/projects/mTCP-skeleton/third_party/dpdk-iface-kmod/Module.symvers -e -i Module.symvers   -T -

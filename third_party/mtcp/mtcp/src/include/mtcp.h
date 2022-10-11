@@ -155,6 +155,11 @@ struct mtcp_config
 	int *nif_to_eidx; // mapping physic port indexes to that of the configured port-list
 	int eths_num;
 
+	/* mininet-support config */
+	bool use_mininet;
+	char mn_prefix[128];
+	char mn_interfaces[128];
+
 	/* route config */
 	struct route_table *rtable;		// routing table
 	struct route_table *gateway;	

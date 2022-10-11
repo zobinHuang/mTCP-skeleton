@@ -303,20 +303,33 @@ SetNetEnv(char *dev_name_list, char *port_stat_list)
 				       RTE_CACHE_LINE_SIZE);
 		
 		/* initialize the rte env, what a waste of implementation effort! */
-		int argc = 6;//8;
-		char *argv[RTE_ARGC_MAX] = {"",
-					    "-c",
-					    cpumaskbuf,
-					    "-n",
-					    mem_channels,
-#if 0
-					    "--socket-mem",
-					    socket_mem_str,
-#endif
-					    "--proc-type=auto"
-		};
-		ret = probe_all_rte_devices(argv, &argc, dev_name_list);
-
+		int argc = 0;
+		char *argv[RTE_ARGC_MAX];
+		char mn_interfaces[256];
+		if(!CONFIG.use_mininet){	
+			// case that not use mininet
+			argc = 6;
+			argv[0] = "";
+			argv[1] = "-c";
+			argv[2] = cpumaskbuf;
+			argv[3] = "-n";
+			argv[4] = mem_channels;
+			argv[5] = "--proc-type=auto";
+			probe_all_rte_devices(argv, &argc, dev_name_list);
+		} else {	
+			// case that use mininet
+			argc = 9;
+			argv[0] = "";
+			argv[1] = "-c";
+			argv[2] = cpumaskbuf;
+			argv[3] = "-n";
+			argv[4] = mem_channels;
+			argv[5] = "--proc-type=auto";
+			sprintf(mn_interfaces, "--vdev=eth_af_packet0,iface=%s,qpairs=8", CONFIG.mn_interfaces);
+			argv[6] = mn_interfaces;
+			argv[7] = "--file-prefix";
+			argv[8] = CONFIG.mn_prefix;
+		}
 
 		/* STEP 4: build up socket mem parameter */
 		sprintf(socket_mem_str, "%d", socket_mem);

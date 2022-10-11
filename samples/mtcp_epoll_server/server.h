@@ -10,10 +10,10 @@
 #define HT_SUPPORT  false
 
 #define EPOLL_MAX_EVENTS 1024
-#define EPOLL_TIMEOUT 3000
+#define EPOLL_TIMEOUT -1
 
-#define SOCKET_IP   "10.0.109.2"
-#define SOCKET_PORT 10000
+#define SOCKET_IP   "10.0.20.2"
+#define SOCKET_PORT 80
 
 typedef struct epoll_server_thread_context{
     int     core;

@@ -25,25 +25,26 @@
 #define MAX_OPTLINE_LEN 			1024
 #define ALL_STRING 				"all"
 
-static const char *route_file = 		"config/route.conf";
-static const char *arp_file = 			"config/arp.conf";
+static char route_file[256] = 		"config/route.conf";
+static char arp_file[256]  = 		"config/arp.conf";
 struct mtcp_manager *g_mtcp[MAX_CPUS] = 	{NULL};
 struct mtcp_config CONFIG = {
 	/* set default configuration */
-	.max_concurrency  =			10000,
-	.max_num_buffers  =			10000,
-	.rcvbuf_size	  =			-1,
-	.sndbuf_size	  =			-1,
-	.tcp_timeout	  =			TCP_TIMEOUT,
-	.tcp_timewait	  =			TCP_TIMEWAIT,
-	.num_mem_ch	  =			0,
+	.max_concurrency  	=			10000,
+	.max_num_buffers  	=			10000,
+	.use_mininet 	  	=			false,
+	.rcvbuf_size	  	=			-1,
+	.sndbuf_size	  	=			-1,
+	.tcp_timeout	  	=			TCP_TIMEOUT,
+	.tcp_timewait	  	=			TCP_TIMEWAIT,
+	.num_mem_ch	  		=			0,
 #if USE_CCP
-	.cc           	  =         		"reno\n",
+	.cc           	  	=         	"reno\n",
 #endif
 #ifdef ENABLE_ONVM
-	.onvm_inst	  =			(uint16_t) -1,
-	.onvm_dest	  =			(uint16_t) -1,
-	.onvm_serv	  =			(uint16_t) -1
+	.onvm_inst	  		=			(uint16_t) -1,
+	.onvm_dest	  		=			(uint16_t) -1,
+	.onvm_serv	  		=			(uint16_t) -1
 #endif
 };
 addr_pool_t ap[ETH_NUM] = 			{NULL};
@@ -597,6 +598,30 @@ ParseConfiguration(char *line)
 			TRACE_CONFIG("The maximum concurrency should be larger than 0.\n");
 			return -1;
 		}
+	} else if (strcmp(p, "arp_conf_path") == 0) {
+		if (!strcpy(arp_file, q)){
+			TRACE_CONFIG("Failed to set path of arp.conf as %s\n", q);
+			return -1;
+		} else 
+			TRACE_CONFIG("Set path of arp.conf as %s\n", q);
+	} else if (strcmp(p, "route_conf_path") == 0) {
+		if (!strcpy(route_file, q)){
+			TRACE_CONFIG("Failed to set path of route.conf as %s\n", q);
+			return -1;
+		} else 
+			TRACE_CONFIG("Set path of route.conf as %s\n", q);
+	} else if (strcmp(p, "use_mininet") == 0) {
+		CONFIG.use_mininet = (!strcmp(q, "true")?true:false);
+		if (CONFIG.use_mininet)
+			TRACE_CONFIG("Run mtcp-based application upon mininet\n");
+	} else if (strcmp(p, "mn_prefix") == 0) {
+		if(!strcpy(CONFIG.mn_prefix, q)){
+			TRACE_CONFIG("Failed to init mininet prefix\n");
+			return -1;
+		}
+	} else if (strcmp(p, "mn_interfaces") == 0) {
+		strcpy(CONFIG.mn_interfaces, q);
+		TRACE_CONFIG("Use mininet host interface: %s\n", q);
 	} else if (strcmp(p, "max_num_buffers") == 0) {
 		CONFIG.max_num_buffers = mystrtol(q, 10);
 		if (CONFIG.max_num_buffers < 0) {

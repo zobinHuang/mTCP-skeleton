@@ -115,17 +115,17 @@ static struct rte_eth_conf port_conf = {
 // #else
 // 		.max_rx_pkt_len = 	RTE_ETHER_MAX_LEN,
 // #endif
-#if RTE_VERSION > RTE_VERSION_NUM(17, 8, 0, 0)
-		.offloads	=	(
-#if RTE_VERSION < RTE_VERSION_NUM(18, 5, 0, 0)
-					 DEV_RX_OFFLOAD_CRC_STRIP |
-#endif /* !18.05 */
-					 DEV_RX_OFFLOAD_CHECKSUM
-#ifdef ENABLELRO
-					 | DEV_RX_OFFLOAD_TCP_LRO
-#endif
-					 ),
-#endif /* !17.08 */
+// #if RTE_VERSION > RTE_VERSION_NUM(17, 8, 0, 0)
+// 		.offloads	=	(
+// #if RTE_VERSION < RTE_VERSION_NUM(18, 5, 0, 0)
+// 					 DEV_RX_OFFLOAD_CRC_STRIP |
+// #endif /* !18.05 */
+// 					 DEV_RX_OFFLOAD_CHECKSUM
+// #ifdef ENABLELRO
+// 					 | DEV_RX_OFFLOAD_TCP_LRO
+// #endif
+// 					 ),
+// #endif /* !17.08 */
 		.split_hdr_size = 	0,
 #if RTE_VERSION < RTE_VERSION_NUM(18, 5, 0, 0)
 		.header_split   = 	0, /**< Header Split disabled */
@@ -147,11 +147,11 @@ static struct rte_eth_conf port_conf = {
 	},
 	.txmode = {
 		.mq_mode = 		ETH_MQ_TX_NONE,
-#if RTE_VERSION >= RTE_VERSION_NUM(18, 5, 0, 0)
-		.offloads	=	(DEV_TX_OFFLOAD_IPV4_CKSUM |
-					 DEV_TX_OFFLOAD_UDP_CKSUM |
-					 DEV_TX_OFFLOAD_TCP_CKSUM)
-#endif
+// #if RTE_VERSION >= RTE_VERSION_NUM(18, 5, 0, 0)
+// 		.offloads	=	(DEV_TX_OFFLOAD_IPV4_CKSUM |
+// 					 DEV_TX_OFFLOAD_UDP_CKSUM |
+// 					 DEV_TX_OFFLOAD_TCP_CKSUM)
+// #endif
 	},
 };
 
