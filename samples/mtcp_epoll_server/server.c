@@ -58,11 +58,11 @@ epoll_server_thread_context* _init_thread(void *arg){
 	}
 	
 	// affinitize application thread to a CPU core
-	#if HT_SUPPORT
-		mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
-	#else
-		mtcp_core_affinitize(ctx->core);
-	#endif
+	// #if HT_SUPPORT
+	// 	mtcp_core_affinitize(ctx->core + (config->cpu_num/2));
+	// #else
+	// 	mtcp_core_affinitize(ctx->core);
+	// #endif
 
 	// create mtcp context, this will spawn an mtcp thread
 	ctx->mtcp_context = mtcp_create_context(ctx->core);

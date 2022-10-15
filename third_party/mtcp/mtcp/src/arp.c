@@ -105,6 +105,9 @@ GetDestinationHWaddr(uint32_t dip, uint8_t is_gateway)
 	ip_addr.s_addr = dip;
 	TRACE_CONFIG("We're looking for the MAC of %s\n", inet_ntoa(ip_addr));
 
+	if(is_gateway == 1)
+		TRACE_CONFIG("%s is outside of lan\n", inet_ntoa(ip_addr));
+
 	if (is_gateway == 1 && CONFIG.arp.gateway)
 		d_haddr = (CONFIG.arp.gateway)->haddr;
 	else {	
