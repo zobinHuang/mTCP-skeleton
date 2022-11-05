@@ -72,6 +72,11 @@ SET(PATH_SAMPLE_MTCP_SERVER_SRC ${PATH_SAMPLE_SRC}/mtcp_epoll_server)
 file(GLOB_RECURSE SRC_MTCP_SERVER ${PATH_SAMPLE_MTCP_SERVER_SRC}/*.c)
 add_executable(sample_mtcp_epoll_server ${SRC_MTCP_SERVER})
 
+# mtcp server code
+SET(PATH_SAMPLE_MTCP_CLIENT_SRC ${PATH_SAMPLE_SRC}/mtcp_client)
+file(GLOB_RECURSE SRC_MTCP_CLIENT ${PATH_SAMPLE_MTCP_CLIENT_SRC}/*.c)
+add_executable(sample_mtcp_client ${SRC_MTCP_CLIENT})
+
 # ====================== Utils Executables ======================
 # path to sample code
 SET(PATH_UTILS_SRC utils)
@@ -85,6 +90,7 @@ set(TB_TARGETS
     sample_legacy_server
     sample_legacy_client
     sample_mtcp_epoll_server
+    sample_mtcp_client
     utils_dpdk_test
 )
 foreach( tb_target ${TB_TARGETS} )

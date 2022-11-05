@@ -8,7 +8,7 @@ int connect_socket(int client_fd);
 #define SOCKET_SEND_BUF_SIZE    128
 #define SOCKET_RECV_BUF_SIZE    128
 #define SOCKET_SERVER_IP        "10.0.109.2"
-#define SOCKET_SERVER_PORT      10000
+#define SOCKET_SERVER_PORT      11103
 #define SOCKET_CLIENT_IP        "10.0.109.3"
 #define SOCKET_CLIENT_PORT      10000
 
