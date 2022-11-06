@@ -32,3 +32,4 @@ mkdir build-libmemcached && cd build-libmemcached
 cmake ..
 make
 make install
+ldconfig

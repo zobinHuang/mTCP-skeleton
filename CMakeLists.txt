@@ -102,7 +102,7 @@ foreach( tb_target ${TB_TARGETS} )
     target_link_libraries(${tb_target} ${LIB_EVENT_PTHREADS})
     target_link_libraries(${tb_target} ${LIB_EVENT})
     target_link_libraries(${tb_target} ${DPDK_LDFLAGS})
-    target_link_libraries(${tb_target} -lpthread -lm -lgmp)
+    target_link_libraries(${tb_target} -lpthread -lm -lgmp -lmemcached)
 
     # add mtcp-skeleton library
     target_link_libraries(${tb_target} mtcp_skeleton)
