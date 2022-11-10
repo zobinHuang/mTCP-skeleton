@@ -48,8 +48,7 @@ int main(int argc, char **argv){
         fprintf(stdout, "failed to set key-value pair\n");
     }
     
-    // 这玩意挂了！
-    // memcached_free(memc);
+    memcached_free(memc);
 
     return 0;
 }
