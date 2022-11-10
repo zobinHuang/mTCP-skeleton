@@ -41,13 +41,32 @@ int main(int argc, char **argv){
     memcached_st *memc= memcached(config_string, strlen(config_string));
     fprintf(stdout, "number of servers: %u\n", memc->number_of_hosts);
     
+    // set test
     char *key= "foo";
     char *value= "value";
-    memcached_return_t rc= memcached_set(memc, key, strlen(key), value, strlen(value), (time_t)0, (uint32_t)0);
+    memcached_return_t rc= memcached_set(memc, key, strlen(key), value, strlen(value), (time_t)10, (uint32_t)0);
     if (rc != MEMCACHED_SUCCESS){
         fprintf(stdout, "failed to set key-value pair\n");
     }
     
+    // get test
+    size_t value_length;
+    uint32_t flags;
+    char *retrieved_value = memcached_get(memc, key, strlen(key), &value_length, &flags, &rc);
+    if (rc == MEMCACHED_SUCCESS){
+        fprintf(stdout, "obtain value of key %s: %s\n", key, retrieved_value);
+    } else {
+        fprintf(stdout, "failed to get value of key %s\n", key);
+    }
+
+    // delete test
+    rc = memcached_delete(memc, key, strlen(key), (time_t)0);
+    if (rc == MEMCACHED_SUCCESS){
+        fprintf(stdout, "delete key %s\n", key);
+    } else {
+        fprintf(stdout, "failed to delete key %s\n", key);
+    }
+
     memcached_free(memc);
 
     return 0;
